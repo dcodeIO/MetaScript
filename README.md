@@ -53,9 +53,9 @@ It's just that simple.
 Advanced examples
 -----------------
 Of course it's possible to do much more with it, like declaring macros and defining an entire set of useful utility
-functions.
+functions, just like with any sort of preprocessor:
 
-#### That's a utility function:
+#### That's an utility function:
 
 ```js
 /*? function includeFile(file) {
@@ -96,8 +96,8 @@ The API is pretty much straight forward:
 * **MetaScript#program** contains the meta program's source
 * **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source
   depending on what's defined in `scope` and returns the final source. `basedir` specifies the base directory for top
-  level relative includes and defaults to `.`
-* **Meta.compile(source:string):string** compiles the source to a raw meta program and returns its JavaScript source
+  level relative includes and defaults to `.` under node.js and `/` in the browser
+* **MetaScript.compile(source:string):string** compiles the source to a meta program and returns its JavaScript source
 
 Command line
 ------------

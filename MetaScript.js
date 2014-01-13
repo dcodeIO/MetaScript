@@ -20,7 +20,8 @@
  * see: https://github.com/dcodeIO/MetaScript for details
  */ //
 (function(global) {
-
+    "use strict";
+    
     // This is a rather small program with lots of comments, so everyone can hack it easily.
 
     /**
@@ -77,7 +78,7 @@
             } else return '';
         }
 
-        // Appends additional content to the program
+        // Appends additional content to the program, if not empty
         function append(source) {
             if (s === '') return;
             var index = 0,
@@ -105,8 +106,8 @@
                 // Trim whitespaces in front of the line
                 s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
 
-                // Append leading contents if not empty
-                if (s !== '') append(s);
+                // Append leading contents
+                append(s);
 
                 // Find the end of the line
                 exprLine.lastIndex = match.index;
@@ -123,8 +124,8 @@
                 // Trim whitespaces in front of the block if it is using a dedicated line
                 s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
 
-                // Append leading contents if not empty
-                if (s !== '') append(s);
+                // Append leading contents
+                append(s);
 
                 // Find the end of the block
                 exprBlock.lastIndex = match.index;
@@ -147,9 +148,8 @@
             expr.lastIndex = index;
         }
 
-        // Append the remaining contents if not empty
-        s = source.substring(index);
-        if (s !== '') append(s);
+        // Append the remaining contents
+        append(source.substring(index));
 
         // And return the program
         return out.join('');
