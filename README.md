@@ -15,7 +15,7 @@ If you already know JavaScript, adding some meta is as simple as remembering, th
 * `?=` writes the expression's raw result to the document
 * `?==` writes the expression's typed result to the document (runs it through `JSON.stringify`)
 
-MetaScript then turns the meta inside out, making them the actual program, that then outputs the contents in between.
+MetaScript then turns the meta inside out, making it the actual program, that outputs the contents in between.
 
 A simple example
 ----------------
