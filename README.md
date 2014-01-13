@@ -92,20 +92,17 @@ The API is pretty much straight forward:
   
 Command line
 ------------
-Using MetaScript from the command line is simple with node:
+Using `metascript` from the command line is simple with node:
 
 `npm install -g metascript`
 
 ```
- _  _|_ _  _ _ _. _ |_
-||)(-|_(_|_)( | ||_)|_
-                 |
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
 Built-in utility functions
 --------------------------
-There are a few quite useful utility functions available that are available to every meta program:
+There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
   Writes some raw data to the resulting document which is equal to using `?=`

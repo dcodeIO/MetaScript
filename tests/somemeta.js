@@ -23,7 +23,7 @@ ByteBuffer.prototype.writeInt8(value, offset) {
     // ...
 }
 
-//? define("YEP", true);
-//? include("someinclude.js")
+//? var YEP = define("YEP", true);
+//? if(YEP) include("someinclude.js")
 
 console.log(/*?== "that's it" */);
