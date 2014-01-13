@@ -21,6 +21,8 @@
  */ //
 (function(global) {
 
+    // This is a rather small program with lots of comments and that's good, so everyone can hack it easily.
+
     /**
      * Constructs a new MetaScript instance.
      * @param {string=} source Source to compile
@@ -163,6 +165,8 @@
         }
         var out = [];
 
+        ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
+
         /**
          * Writes some contents to the document.
          * @param {*} s Contents to write
@@ -203,7 +207,12 @@
             write(new MetaScript(source).transform(scope, dirname(filename)));
         }
 
-        eval('(function(){'+vars.join('')+this.program+'})()');
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        eval('(function(){'+vars.join('')+this.program+'})()'); // This is, of course, potentially evil as it is capable
+        // of polluting the global namespace if variables have been declared carelessly. Always use `var something = ..`
+        // for local (to the file) variables and `define('varname', ...)` for global ones.
+
         return out.join('');
     };
 
