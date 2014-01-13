@@ -1,3 +1,5 @@
+//? if (typeof WHAT === 'undefined') var WHAT = define('WHAT', false);
+
 //? if (WHAT) {
 console.log("it's true");
 //? } else {

@@ -114,7 +114,8 @@ There are a few quite useful utility functions available that are available to e
 * **dirname(filename:string)**  
   Gets the directory name from a file name
 * **define(varname:string, value:*)**  
-  Defines a variable on the scope which is then also available to includes
+  Defines a variable on the scope which is then also available to includes. To make it available both locally as well as
+  globally, use the pattern: `//? var SOMETHING = define('SOMETHING', true);`
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
 

@@ -199,7 +199,6 @@
          */
         function define(varname, value) {
             scope[varname] = value;
-            eval("var "+varname+" = "+JSON.stringify(value)+";\n");
             return value; // For one-line local assignments
         }
 
