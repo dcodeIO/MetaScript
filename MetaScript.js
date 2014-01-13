@@ -176,6 +176,14 @@
         }
 
         /**
+         * Writes some contents to the document, followed by a new line.
+         * @param {*} s Contents to write
+         */
+        function writeln(s) {
+            out.push(s+"\n");
+        }
+
+        /**
          * Extracts the directory name from a file name.
          * @param {string} filename File name
          * @returns {string} Directory name, defaults to `.`
@@ -194,6 +202,7 @@
         function define(varname, value) {
             scope[varname] = value;
             eval("var "+varname+" = "+JSON.stringify(value)+";\n");
+            return value; // For one-line local assignments
         }
 
         /**

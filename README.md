@@ -94,15 +94,17 @@ The API is pretty much straight forward:
 
 Built-in utility functions
 --------------------------
-There are a few quite useful utility functions available that are available for every meta program:
+There are a few quite useful utility functions available that are available to every meta program:
 
-* **write(contents:string)**
-  Writes some raw data to the resulting document
-* **dirname(filename:string)**
+* **write(contents:string)**  
+  Writes some raw data to the resulting document which is equal to using `?=`
+* **writeln(contents:string)**  
+  Writes some raw data, followed by a line break, to the resulting document
+* **dirname(filename:string)**  
   Gets the directory name from a file name
-* **define(varname:string, value:*)**
+* **define(varname:string, value:*)**  
   Defines a variable on the scope which is then also available to includes
-* **include(filename:string, absolute:boolean=)**
+* **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
 
 Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
