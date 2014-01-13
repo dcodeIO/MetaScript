@@ -38,6 +38,13 @@
     };
 
     /**
+     * Whether running under node.js or not.
+     * @type {boolean}
+     * @const
+     */
+    MetaScript.IS_NODE = typeof require === 'function' && typeof process !== 'undefined' && typeof process.nextTick === 'function';
+
+    /**
      * Compiles the specified source to a meta program.
      * @param {string} source Source
      * @returns {string} Meta program
@@ -151,11 +158,11 @@
     /**
      * Transforms the meta program.
      * @param {Object} scope Scope
-     * @param {string=} basedir Base directory for includes, defaults to `.`
+     * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
      * @returns {string} Transformed source
      */
     MetaScript.prototype.transform = function(scope, basedir) {
-        basedir = basedir || ".";
+        basedir = basedir || (MetaScript.IS_NODE ? "." : "/");
         var vars = [];
         for (var k in (scope || {})) {
             if (scope.hasOwnProperty(k)) {
@@ -217,9 +224,9 @@
          * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
          */
         function include(filename, absolute) {
-            filename = absolute ? filename : basedir + '/' + filename;
+            filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
             var source;
-            if (typeof require === 'function' && typeof process !== 'undefined' && typeof process.nextTick === 'function') {
+            if (MetaScript.IS_NODE) {
                 source = require("fs").readFileSync(filename)+"";
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
@@ -253,7 +260,6 @@
             function () {return new ActiveXObject("Msxml3.XMLHTTP")},
             function () {return new ActiveXObject("Microsoft.XMLHTTP")}
         ];
-        /** @type {?XMLHttpRequest} */
         var xhr = null;
         for (var i=0;i<XMLHttpFactories.length;i++) {
             try { xhr = XMLHttpFactories[i](); }
