@@ -1,12 +1,12 @@
-Meta.js
-=======
+MetaScript
+==========
 
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
 data, or that do part of the work at compile time that would otherwise be done at runtime. In some cases, this allows
 programmers to minimize the number of lines of code to express a solution (hence reducing development time), or it gives
 programs greater flexibility to efficiently handle new situations without recompilation.
 
-**Meta.js** is compile-time meta programming in JavaScript.
+**MetaScript** is build-time meta programming in JavaScript.
 
 How does it work?
 -----------------
@@ -29,9 +29,9 @@ MyLibary.VERSION = /*?== VERSION */;
 This is what the meta program, when compiled, will look like:
 
 ```js
-  write('MyLibrary.VERSION = ');
+; write('MyLibrary.VERSION = ');
 write(JSON.stringify(VERSION));
-  write(';\r\n');
+; write(';\r\n');
 ```
 
 Accordingly, a transformation of that exact meta program with a scope of `{ VERSION: "1.0" }` will result in:
@@ -50,7 +50,7 @@ functions.
 #### That's a utility function:
 
 ```js
-/*? function include(file) {
+/*? function includeFile(file) {
     write(require("fs").readFileSync(file));
 } */
 ```
@@ -58,7 +58,7 @@ functions.
 Using it:
 
 ```js
-//? include("some/other/file.js")
+//? includeFile("some/other/file.js")
 ```
 
 #### That's a macro:
@@ -80,6 +80,19 @@ ByteBuffer.prototype.writeInt8(value, offset) {
 }
 ```
 
+Inbuilt utility functions
+-------------------------
+There are a few quite useful utility functions available:
+
+* **write(contents:string)**
+  Writes some raw data to the resulting document
+* **dirname(filename:string)**
+  Gets the directory name from a file name
+* **define(varname:string, value:*)**
+  Defines a variable on the scope which is then also available to includes
+* **include(filename:string, absolute:boolean=)**
+  Includes another source file. `absolute` defaults to `false` (relative)
+
 Everything else is up to your imagination.
 
-License: Apache License, Version 2.0
+**License:** Apache License, Version 2.0

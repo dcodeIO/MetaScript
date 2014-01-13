@@ -4,19 +4,12 @@ console.log("it's true");
 console.log("it's false");
 //? }
 
-/*?
-if (WHAT) {
-*/
+/*? if (WHAT) */
 console.log("it's true");
-/*?
-} else {
-*/
+/*? else */
 console.log("it's false");
-/*?
-}
-*/
 
-console.log(/*? if (WHAT) { */ "it's true"+ /*? } else { */ "it's false"+ /*? } */"");
+console.log(/*? if (WHAT) { */ "it's true"+ /*? } else { */ "it's false" /*? } */);
 
 //? function assertOffset(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
@@ -27,5 +20,8 @@ ByteBuffer.prototype.writeInt8(value, offset) {
     //? assertOffset('offset');
     // ...
 }
+
+//? define("YEP", true);
+//? include("someinclude.js")
 
 console.log(/*?== "that's it" */);

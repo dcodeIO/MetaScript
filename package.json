@@ -1,0 +1,27 @@
+{
+    "name": "metascript",
+    "version": "0.1.0",
+    "author": "Daniel Wirtz <dcode@dcode.io>",
+    "description": "Build-time meta programming in JavaScript.",
+    "main": "./MetaScript.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dcodeIO/MetaScript.git"
+    },
+    "bugs": {
+        "url": "https://github.com/dcodeIO/MetaScript/issues"
+    },
+    "keywords": ["JavaScript", "build", "utility"],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "testjs": "latest"
+    },
+    "license": "Apache-2.0",
+    "engines": {
+        "node": ">=0.8"
+    },
+    "scripts": {
+        "prepublish": "npm test"
+    }
+}
