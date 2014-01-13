@@ -204,6 +204,14 @@
         }
 
         /**
+         * Deletes a previously defined variable from the scope.
+         * @param {string} varname Variable name
+         */
+        function undefine(varname) {
+            delete scope[varname];
+        }
+
+        /**
          * Includes another source file.
          * @param {string} filename File to include
          * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path

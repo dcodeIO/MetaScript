@@ -122,6 +122,8 @@ There are a few quite useful utility functions available to every meta program:
 * **define(varname:string, value:*)**  
   Defines a variable on the scope which is then available to includes. To make it available both locally as well as
   globally, use the pattern: `//? var SOMETHING = define('SOMETHING', true);`
+* **undefine(varname:string)**  
+  Deletes a previously defined variable from the scope
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
 
