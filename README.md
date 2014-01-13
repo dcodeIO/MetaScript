@@ -113,7 +113,7 @@ There are a few quite useful utility functions available to every meta program:
 * **dirname(filename:string)**  
   Gets the directory name from a file name
 * **define(varname:string, value:*)**  
-  Defines a variable on the scope which is then also available to includes. To make it available both locally as well as
+  Defines a variable on the scope which is then available to includes. To make it available both locally as well as
   globally, use the pattern: `//? var SOMETHING = define('SOMETHING', true);`
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)

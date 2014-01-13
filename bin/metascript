@@ -8,12 +8,12 @@ var ascli = require("ascli"),
 
 process.stderr.write(ascli("metascript".green.bold, "v"+pkg.version));
 
-if (process.argv.length < 3) {
+if (app.argv.length < 1) {
     console.log("Usage: ".white.bold+"metascript".green.bold+" sourcefile [basedir] -SOMEDEFINE=\"some\" -OTHERDEFINE=\"thing\" [> outfile]\n");
     process.exit(1);
 }
 
-var filename = process.argv[2],
+var filename = app.argv[0],
     basedir,
     scope = app.opt;
 
