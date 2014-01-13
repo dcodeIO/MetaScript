@@ -15,6 +15,8 @@ If you already know JavaScript, adding some meta is as simple as remembering, th
 * `?=` writes the expression's raw result to the document
 * `?==` writes the expression's typed result to the document (runs it through `JSON.stringify`)
 
+MetaScript then turns the meta inside out, making them the actual program, that then outputs the contents in between.
+
 A simple example
 ----------------
 Let's assume that you have a library and that you want its version number to be included as the constant
@@ -40,8 +42,8 @@ MyLibrary.VERSION = "1.0";
 
 It's just that simple.
 
-Advanced example
-----------------
+Advanced examples
+-----------------
 Of course it's possible to do much more with it, like declaring macros and defining an entire set of useful utility
 functions.
 
