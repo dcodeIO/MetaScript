@@ -92,9 +92,9 @@ The API is pretty much straight forward:
 * **Meta.compile(source:string):string** Compiles a MetaScript source to a raw JavaScript meta program and returns its
   JavaScript source
 
-Inbuilt utility functions
--------------------------
-There are a few quite useful utility functions available:
+Built-in utility functions
+--------------------------
+There are a few quite useful utility functions available that are available for every meta program:
 
 * **write(contents:string)**
   Writes some raw data to the resulting document
@@ -105,7 +105,8 @@ There are a few quite useful utility functions available:
 * **include(filename:string, absolute:boolean=)**
   Includes another source file. `absolute` defaults to `false` (relative)
 
-Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests).
-Everything else is up to your imagination.
+Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
+these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `//` and
+`/**/` style comments. Everything else is, of course, up to your imagination.
 
 **License:** Apache License, Version 2.0

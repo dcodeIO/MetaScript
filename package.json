@@ -2,7 +2,7 @@
     "name": "metascript",
     "version": "0.1.0",
     "author": "Daniel Wirtz <dcode@dcode.io>",
-    "description": "Build-time meta programming in JavaScript.",
+    "description": "Meta programming in JavaScript, e.g. to build different versions of a library.",
     "main": "./MetaScript.js",
     "repository": {
         "type": "git",
