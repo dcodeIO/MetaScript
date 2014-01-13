@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+var ascli = require("ascli"),
+    app = ascli.app("metascript"),
+    fs = require("fs"),
+    path = require("path"),
+    pkg = require(path.join(__dirname, "..", "package.json")),
+    MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
+
+process.stderr.write(ascli("metascript".green.bold, "v"+pkg.version));
+
+if (process.argv.length < 3) {
+    console.log("Usage: ".white.bold+"metascript".green.bold+" sourcefile [basedir] -SOMEDEFINE=\"some\" -OTHERDEFINE=\"thing\" [> outfile]\n");
+    process.exit(1);
+}
+
+var filename = process.argv[2],
+    basedir,
+    scope = app.opt;
+
+if (app.argv.length >= 2) {
+    basedir = app.argv[1];
+} else {
+    basedir = path.dirname(filename);
+}
+
+console.error(("Processing '"+filename+"' in '"+basedir+"' with scope:\n").white.bold+JSON.stringify(scope, null, 2).grey.bold);
+
+try {
+    var meta = new MetaScript(fs.readFileSync(filename));
+    process.stdout.write(meta.transform(scope, basedir));
+    app.ok();
+} catch (err) {
+    app.fail(err.message);
+}

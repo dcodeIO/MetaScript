@@ -71,8 +71,6 @@
 
         // Appends additional content to the program
         function append(source) {
-
-            console.log("append: "+escape(source));
             if (s === '') return;
             var index = 0,
                 expr = /\n/g,
@@ -94,7 +92,7 @@
             s = source.substring(index, match.index);
 
             // Look if it is a line or a block of meta
-            if (match[1] === '//?') { // Line
+            if (match[1] === '/'+'/?') { // Line
 
                 // Trim whitespaces in front of the line
                 s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });

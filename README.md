@@ -2,11 +2,9 @@ MetaScript
 ==========
 
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
-data, or that do part of the work at compile time that would otherwise be done at runtime. In some cases, this allows
-programmers to minimize the number of lines of code to express a solution (hence reducing development time), or it gives
-programs greater flexibility to efficiently handle new situations without recompilation.
+data, or that do part of the work at compile time that would otherwise be done at runtime.
 
-**MetaScript** is build-time meta programming in JavaScript.
+**MetaScript** is a tool for build-time meta programming using JavaScript as the meta language.
 
 How does it work?
 -----------------
@@ -31,7 +29,7 @@ This is what the meta program, when compiled, will look like:
 ```js
   write('MyLibrary.VERSION = ');
 write(JSON.stringify(VERSION));
-  write(';\r\n');
+  write(';\n');
 ```
 
 Accordingly, a transformation of that exact meta program with a scope of `{ VERSION: "1.0" }` will result in:
@@ -91,6 +89,19 @@ The API is pretty much straight forward:
   level relative includes and defaults to `.`
 * **Meta.compile(source:string):string** Compiles a MetaScript source to a raw JavaScript meta program and returns its
   JavaScript source
+  
+Command line
+------------
+Using MetaScript from the command line is simple with node:
+
+`npm install -g metascript`
+
+```
+ _  _|_ _  _ _ _. _ |_
+||)(-|_(_|_)( | ||_)|_
+                 |
+ Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
+```
 
 Built-in utility functions
 --------------------------
@@ -108,7 +119,7 @@ There are a few quite useful utility functions available that are available to e
   Includes another source file. `absolute` defaults to `false` (relative)
 
 Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
-these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `//` and
-`/**/` style comments. Everything else is, of course, up to your imagination.
+these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
+`/* ... */` style comments. Everything else is, of course, up to your imagination.
 
 **License:** Apache License, Version 2.0
