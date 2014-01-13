@@ -1,5 +1,5 @@
-MetaScript
-==========
+![MetaScript](https://raw.github.com/dcodeIO/MetaScript/master/MetaScript.png)
+==============================================================================
 
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
 data, or that do part of the work at compile time that would otherwise be done at runtime.
