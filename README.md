@@ -105,6 +105,7 @@ There are a few quite useful utility functions available:
 * **include(filename:string, absolute:boolean=)**
   Includes another source file. `absolute` defaults to `false` (relative)
 
+Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests).
 Everything else is up to your imagination.
 
 **License:** Apache License, Version 2.0
