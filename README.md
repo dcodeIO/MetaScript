@@ -86,9 +86,9 @@ The API is pretty much straight forward:
 
 * **new MetaScript(source:string)** creates a new instance with `source` compiled to a meta program
 * **MetaScript#program** contains the meta program's source
-* **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source through
-  running the meta program depending on what's defined in `scope` and returns the final source. `basedir` specified the
-  base directory for top level includes and defaults to `.`
+* **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source
+  depending on what's defined in `scope` and returns the final source. `basedir` specifies the base directory for top
+  level relative includes and defaults to `.`
 * **Meta.compile(source:string):string** Compiles a MetaScript source to a raw JavaScript meta program and returns its
   JavaScript source
 
