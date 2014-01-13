@@ -29,9 +29,9 @@ MyLibary.VERSION = /*?== VERSION */;
 This is what the meta program, when compiled, will look like:
 
 ```js
-; write('MyLibrary.VERSION = ');
+  write('MyLibrary.VERSION = ');
 write(JSON.stringify(VERSION));
-; write(';\r\n');
+  write(';\r\n');
 ```
 
 Accordingly, a transformation of that exact meta program with a scope of `{ VERSION: "1.0" }` will result in:

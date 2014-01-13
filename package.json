@@ -11,7 +11,7 @@
     "bugs": {
         "url": "https://github.com/dcodeIO/MetaScript/issues"
     },
-    "keywords": ["JavaScript", "build", "utility"],
+    "keywords": ["JavaScript", "meta programming", "meta", "build", "utility"],
     "dependencies": {
     },
     "devDependencies": {
@@ -22,6 +22,7 @@
         "node": ">=0.8"
     },
     "scripts": {
-        "prepublish": "npm test"
+        "prepublish": "npm test",
+        "test": "node tests/test.js"
     }
 }
