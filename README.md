@@ -8,7 +8,7 @@ data, or that do part of the work at compile time that would otherwise be done a
 
 How does it work?
 -----------------
-If you already know JavaScript, adding some meta is as simple as remembering, that ...
+If you already know JavaScript, adding some meta is as simple as remembering that ...
 
 * A line of meta begins with `//?`
 * A block of meta is enclosed in `/*?`  and `*/`
@@ -23,7 +23,14 @@ Let's assume that you have a library and that you want its version number to be 
 `MyLibrary.VERSION`. With meta, this is as simple as:
 
 ```js
-MyLibary.VERSION = /*?== VERSION */;
+MyLibrary.VERSION = /*?== VERSION */;
+// or, alternatively, if VERSION is always string-safe:
+MyLibrary.VERSION = "/*?= VERSION */";
+// or, alternatively, if you don't mind a missing trailing semicolon:
+MyLibrary.VERSION = //?== VERSION
+// or, alternatively, if you like it procedural:
+MyLibrary.VERSION = /*? write(JSON.stringify(VERSION)) */;
+// etc.
 ```
 
 This is what the meta program, when compiled, will look like:
@@ -34,7 +41,8 @@ write(JSON.stringify(VERSION));
   write(';\n');
 ```
 
-Accordingly, a transformation of that exact meta program with a scope of `{ VERSION: "1.0" }` will result in:
+Accordingly, a transformation of the source done by running that exact meta program with a scope of `{ VERSION: "1.0" }`
+will result in:
 
 ```js
 MyLibrary.VERSION = "1.0";
@@ -74,7 +82,7 @@ Using it:
 Using it:
 
 ```js
-ByteBuffer.prototype.writeInt8(value, offset) {
+function writeInt8(value, offset) {
     //? assertOffset('offset');
     ...
 }
@@ -89,9 +97,8 @@ The API is pretty much straight forward:
 * **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source
   depending on what's defined in `scope` and returns the final source. `basedir` specifies the base directory for top
   level relative includes and defaults to `.`
-* **Meta.compile(source:string):string** Compiles a MetaScript source to a raw JavaScript meta program and returns its
-  JavaScript source
-  
+* **Meta.compile(source:string):string** compiles the source to a raw meta program and returns its JavaScript source
+
 Command line
 ------------
 Using `metascript` from the command line is simple with node:

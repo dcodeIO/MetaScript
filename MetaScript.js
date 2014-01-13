@@ -21,7 +21,7 @@
  */ //
 (function(global) {
 
-    // This is a rather small program with lots of comments and that's good, so everyone can hack it easily.
+    // This is a rather small program with lots of comments, so everyone can hack it easily.
 
     /**
      * Constructs a new MetaScript instance.
@@ -59,6 +59,7 @@
             return s.replace(/'/g, '\\\'').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
         }
 
+        // Evaluates a meta expression
         function evaluate(expr) {
             if (expr.substring(0, 2) === '==') {
                 return 'write(JSON.stringify('+expr.substring(2).trim()+'));\n';

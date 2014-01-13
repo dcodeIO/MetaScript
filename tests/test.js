@@ -1,6 +1,8 @@
-var MetaScript = require("../MetaScript.js");
+var fs = require("fs"),
+    path = require("path"),
+    MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
 
-var source = require("fs").readFileSync("./tests/somemeta.js"),
+var source = fs.readFileSync(path.join(__dirname, "somemeta.js")),
     meta = new MetaScript(source);
 
 console.log("--PROGRAM--");
