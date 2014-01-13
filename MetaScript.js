@@ -218,7 +218,17 @@
          */
         function include(filename, absolute) {
             filename = absolute ? filename : basedir + '/' + filename;
-            var source = require("fs").readFileSync(filename);
+            var source;
+            if (typeof require === 'function' && typeof process !== 'undefined' && typeof process.nextTick === 'function') {
+                source = require("fs").readFileSync(filename)+"";
+            } else { // Pull it synchronously, FIXME: Is this working?
+                var request = XHR();
+                request.open('GET', filename, false);
+                request.send(null);
+                if (typeof request.responseText === 'string') { // status is 0 on local filesystem
+                    source = request.responseText;
+                } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
+            }
             write(new MetaScript(source).transform(scope, dirname(filename)));
         }
 
@@ -230,6 +240,29 @@
 
         return out.join('');
     };
+
+    /**
+     * Constructs a XMLHttpRequest object.
+     * @returns {!XMLHttpRequest}
+     * @inner
+     */
+    function XHR() {
+        var XMLHttpFactories = [
+            function () {return new XMLHttpRequest()},
+            function () {return new ActiveXObject("Msxml2.XMLHTTP")},
+            function () {return new ActiveXObject("Msxml3.XMLHTTP")},
+            function () {return new ActiveXObject("Microsoft.XMLHTTP")}
+        ];
+        /** @type {?XMLHttpRequest} */
+        var xhr = null;
+        for (var i=0;i<XMLHttpFactories.length;i++) {
+            try { xhr = XMLHttpFactories[i](); }
+            catch (e) { continue; }
+            break;
+        }
+        if (!xhr) throw(new Error("XMLHttpRequest is not supported"));
+        return xhr;
+    }
 
     // Enable module loading if available
     if (typeof module != 'undefined' && module["exports"]) { // CommonJS

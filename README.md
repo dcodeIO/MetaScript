@@ -129,6 +129,8 @@ There are a few quite useful utility functions available to every meta program:
 
 Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
 these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
-`/* ... */` style comments. Everything else is, of course, up to your imagination.
+`/* ... */` style comments.
+
+Everything else is, of course, up to your imagination.
 
 **License:** Apache License, Version 2.0
