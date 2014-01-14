@@ -6,7 +6,7 @@ var ascli = require("ascli"),
     pkg = require(path.join(__dirname, "..", "package.json")),
     MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
 
-process.stderr.write(ascli("metac".green.bold, "v"+pkg.version)+"\n");
+process.stderr.write(ascli("metac".green.bold, "MetaScript compiler "+("v"+pkg.version).gray.bold)+"\n");
 
 if (app.argv.length < 1) {
     console.log("Usage: ".white.bold+"metac".green.bold+" sourcefile [> outfile]\n");

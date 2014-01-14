@@ -101,7 +101,7 @@ The API is pretty much straight forward:
 
 Command line
 ------------
-Using `metascript` from the command line is simple with node:
+Transforming sources on the fly is simple with node:
 
 `npm install -g metascript`
 
@@ -109,7 +109,8 @@ Using `metascript` from the command line is simple with node:
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
-The MetaScript compiler that generates raw meta programs is also available as `metac`:
+In the case that you want to craft your own runtime, the MetaScript compiler that generates raw meta programs is also
+available as `metac`:
 
 ```
  Usage: metac sourcefile [> outfile]
