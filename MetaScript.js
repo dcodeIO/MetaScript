@@ -253,16 +253,16 @@
             filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
             var source;
             if (MetaScript.IS_NODE) {
-                source = indent(require("fs").readFileSync(filename)+"", __ );
+                source = require("fs").readFileSync(filename)+"";
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
                 request.open('GET', filename, false);
                 request.send(null);
                 if (typeof request.responseText === 'string') { // status is 0 on local filesystem
-                    source = indent(request.responseText, __ );
+                    source = request.responseText;
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
-            write(new MetaScript(source).transform(scope, dirname(filename)));
+            write(indent(new MetaScript(source).transform(scope, dirname(filename)), __));
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
