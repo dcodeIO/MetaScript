@@ -281,7 +281,7 @@
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
             try {
-                __source = MetaScript.compile(__source);
+                __source = MetaScript.compile(indent(__source, __));
                 eval(__source);
             } catch (err) {
                 if (err.rethrow) throw(err);
