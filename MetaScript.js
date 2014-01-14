@@ -59,7 +59,8 @@
             exprBlock = /\*\//g,       // Block terminator
             match, matchEnd,           // Matches
             s,                         // Temporary string
-            indent,                    // Indentation
+            indent = '',               // Indentation
+            lastIndent = '',           // Last indentation
             out = [];                  // Output stack
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
@@ -103,8 +104,11 @@
             // Look if it is a line or a block of meta
             if (match[1] === '/'+'/?') { // Line
 
-                // Trim whitespaces in front of the line
-                s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
+                // Trim whitespaces in front of the line and remember the indentation for include() and such
+                s = s.replace(/\n([ \t]*)$/, function($0, $1) { indent = $1; return '\n'; });
+                if (indent !== lastIndent) {
+                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                }
 
                 // Append leading contents
                 append(s);
@@ -121,9 +125,12 @@
 
             } else { // Block
 
-                // Trim whitespaces in front of the block if it is using a dedicated line
+                // Trim whitespaces in front of the block if it is using a dedicated line and remember the indentation
                 s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
-
+                if (indent !== lastIndent) {
+                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                }
+                
                 // Append leading contents
                 append(s);
 
@@ -219,6 +226,20 @@
         }
 
         /**
+         * Intents a block of text.
+         * @param {string} str Text to indent
+         * @param {string} indent Text to use for indentation
+         * @returns {string} Indented text
+         */
+        function indent(str, indent) {
+            var lines = str.split("\n");
+            for (var i=0; i<lines.length; i++) {
+                lines[i] = indent + lines[i];
+            }
+            return lines.join("\n");            
+        }
+
+        /**
          * Includes another source file.
          * @param {string} filename File to include
          * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
@@ -227,13 +248,13 @@
             filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
             var source;
             if (MetaScript.IS_NODE) {
-                source = require("fs").readFileSync(filename)+"";
+                source = indent(require("fs").readFileSync(filename)+"", __ );
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
                 request.open('GET', filename, false);
                 request.send(null);
                 if (typeof request.responseText === 'string') { // status is 0 on local filesystem
-                    source = request.responseText;
+                    source = indent(request.responseText, __ );
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
             write(new MetaScript(source).transform(scope, dirname(filename)));
@@ -241,6 +262,7 @@
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        var __=''; // Indentation
         eval('(function(){'+vars.join('')+this.program+'})()'); // This is, of course, potentially evil as it is capable
         // of polluting the global namespace if variables have been declared carelessly. Always use `var something = ..`
         // for local (to the file) variables and `define('varname', ...)` for global ones.

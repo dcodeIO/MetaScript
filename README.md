@@ -109,8 +109,8 @@ Using `metascript` from the command line is simple with node:
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
-Built-in utility functions
---------------------------
+Built-in utility
+----------------
 There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
@@ -126,7 +126,12 @@ There are a few quite useful utility functions available to every meta program:
   Deletes a previously defined variable from the scope
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
+  
+Additionally, there is one internal variable named `__` (2x underscore) that remembers the current indentation level.
+This is used for example to indent included sources exactly like the meta block that contains the include call.
 
+Examples
+--------
 Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
 these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
 `/* ... */` style comments.
