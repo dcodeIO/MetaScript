@@ -88,16 +88,19 @@ function writeInt8(value, offset) {
 }
 ```
 
+More example will soon be [available in the wiki](https://github.com/dcodeIO/MetaScript/wiki).
+
 API
 ---
 The API is pretty much straight forward:
 
-* **new MetaScript(source:string)** creates a new instance with `source` compiled to a meta program
-* **MetaScript#program** contains the meta program's source
+* **new MetaScript(source:string)** creates a new instance with `source` compiled to a meta program.
+* **MetaScript#program** contains the meta program's source.
 * **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source
   depending on what's defined in `scope` and returns the final source. `basedir` specifies the base directory for top
-  level relative includes and defaults to `.` under node.js and `/` in the browser
-* **MetaScript.compile(source:string):string** compiles the source to a meta program and returns its JavaScript source
+  level relative includes and defaults to `.` under node.js and `/` in the browser.
+* **MetaScript.compile(source:string):string** is just the raw compiler that compiles the source to a meta program and
+  returns its JavaScript source.
 
 Command line
 ------------
@@ -109,8 +112,7 @@ Transforming sources on the fly is simple with node:
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
-And in the case that you have to craft your own runtime, the MetaScript compiler that generates raw meta programs is
-also available as `metac`:
+And in the case that you have to craft your own runtime, the raw compiler is also available as `metac`:
 
 ```
  Usage: metac sourcefile [> outfile]

@@ -53,15 +53,15 @@
     MetaScript.compile = function(source) {
         source = source+"";
 
-        var index = 0,                 // Current working index
-            expr = /(\/\/\?|\/\*\?)/g, // Line/block expression
-            exprLine = /\n|$/g,        // Line terminator
-            exprBlock = /\*\//g,       // Block terminator
-            match, matchEnd,           // Matches
-            s,                         // Temporary string
-            indent = '',               // Indentation
-            lastIndent = '',           // Last indentation
-            out = [];                  // Output stack
+        var index = 0,                     // Current working index
+            expr = /(\/\/\?|\/\*\?)(=?)/g, // Line/block expression
+            exprLine = /\n|$/g,            // Line terminator
+            exprBlock = /\*\//g,           // Block terminator
+            match, matchEnd,               // Matches
+            s,                             // Temporary string
+            indent = '',                   // Indentation
+            lastIndent = '',               // Last indentation
+            out = [];                      // Output stack
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
         function escape(s) {
@@ -88,7 +88,7 @@
                 match;
             while (match = expr.exec(source)) {
                 s = source.substring(index, match.index+1);
-                if (s !== '') out.push('  write(\''+escape(s)+'\');\n');
+                out.push('  write(\''+escape(s)+'\');\n');
                 index = match.index+1;
             }
             s = source.substring(index, source.length);
@@ -102,11 +102,12 @@
             s = source.substring(index, match.index);
 
             // Look if it is a line or a block of meta
-            if (match[1] === '/'+'/?') { // Line
+            if (match[1].indexOf('*') < 0) { // Line
 
-                // Trim whitespaces in front of the line and remember the indentation for include() and such
-                s = s.replace(/\n([ \t]*)$/, function($0, $1) { indent = $1; return '\n'; });
-
+                // Trim whitespaces in front of the line and remember the indentation
+                if (match[2] !== '=')
+                    s = s.replace(/(^|\n)([ \t]*)$/, function($0, $1, $2) { indent = $2; return $1; });
+                
                 // Append leading contents
                 append(s);
 
@@ -119,14 +120,17 @@
                     out.push('__=\''+escape(lastIndent = indent)+'\';\n');
                 }
                 out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
-
+                if (match[2] === '=')
+                    out.push('writeln();\n');
+                
                 // Move on
                 index = matchEnd.index+1;
 
             } else { // Block
 
-                // Trim whitespaces in front of the block if it is using a dedicated line and remember the indentation
-                s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
+                // Trim whitespaces in front of the block and remember the indentation
+                if (match[2] !== '=')
+                    s = s.replace(/(^|\n)([ \t]*)$/, function($0, $1, $2) { indent = $2; return $1; });
                 
                 // Append leading contents
                 append(s);
@@ -181,7 +185,7 @@
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
 
         /**
-         * Writes some contents to the document.
+         * Writes some contents to the document (no indentation).
          * @param {*} s Contents to write
          */
         function write(s) {
@@ -193,7 +197,8 @@
          * @param {*} s Contents to write
          */
         function writeln(s) {
-            out.push(s+"\n");
+            if (typeof s === 'undefined') s = '';
+            out.push(s + "\n");
         }
 
         /**
@@ -237,9 +242,10 @@
                 while (indent_str.length < indent) indent_str += ' ';
                 indent = indent_str;
             }
-            var lines = str.split("\n");
+            var lines = str.split(/\n/);
             for (var i=0; i<lines.length; i++) {
-                lines[i] = indent + lines[i];
+                if (lines[i].trim() !== '')
+                    lines[i] = indent + lines[i];
             }
             return lines.join("\n");            
         }
