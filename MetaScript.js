@@ -203,8 +203,9 @@
                 vars.push(k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
-        var __out = [],     // Output buffer
-            __    = '';     // Indentation
+        var __program = vars.join('')+this.program, // Meta program
+            __out = [],                             // Output buffer
+            __    = '';                             // Indentation
 
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
         
@@ -281,8 +282,8 @@
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
             try {
-                __source = MetaScript.compile(indent(__source, __));
-                eval(__source);
+                var __program = MetaScript.compile(indent(__source, __));
+                eval(__program); // see: (*)
             } catch (err) {
                 if (err.rethrow) throw(err);
                 err = new Error(err.message+" in included meta program of '"+__filename+"':\n"+indent(__source, 4));
@@ -306,8 +307,12 @@
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         try {
-            eval(vars.join('')+this.program); // This is, of course, potentially evil as it is capable of polluting the
-            // global namespace if global variables have been declared carelessly. There is no way around, though.
+            (function() {
+                // Using a wrapper function we enforce a unified behaviour of 'var's between the main and included 
+                // sources, making them always local. Of course it would be possible to make just the main source's vars
+                // globally visible, but that'd be kinda hard to explain and maintain in a reliable way.
+                eval(__program); // see: (*)
+            })();
             return __out.join('');
         } catch (err) {
             if (err.rethrow) throw(err);
@@ -317,6 +322,9 @@
         }
     };
 
+    // (*) The use of eval() is - of course - potentially evil, but there is no way around it without making the library
+    //     harder to use. To limit the impact we always use a fresh VM context under node.js in MetaScript.transform.
+    
     /**
      * Constructs a XMLHttpRequest object.
      * @returns {!XMLHttpRequest}

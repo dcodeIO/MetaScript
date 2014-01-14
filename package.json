@@ -1,6 +1,6 @@
 {
     "name": "metascript",
-    "version": "0.12.0",
+    "version": "0.13.0",
     "author": "Daniel Wirtz <dcode@dcode.io>",
     "description": "Meta programming in JavaScript, e.g. to build different versions of a library.",
     "main": "./MetaScript.js",

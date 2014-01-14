@@ -1,3 +1,4 @@
+// NOPE = //?= typeof NOPE
 console.log(/*?== "included" */);
 
 // This will be indented once more:

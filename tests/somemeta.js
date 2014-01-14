@@ -55,7 +55,9 @@ function writeInt8(value, offset) {
 // Got it?
 
 //? YEP = true;
+//? var NOPE = false;
+// var NOPE = //?= NOPE
 // This will be indented:
     //? if (YEP) include("someinclude.js")
-
+    
 console.log(/*?== "that's it" */);
