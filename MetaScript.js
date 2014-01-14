@@ -167,6 +167,17 @@
     };
 
     /**
+     * Compiles a source to a meta program and transforms it using the specified scope.
+     * @param {string} source Source
+     * @param {Object} scope Scope
+     * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
+     * @returns {string} Transformed source
+     */
+    MetaScript.transform = function(source, scope, basedir) {
+        return new MetaScript(source).transform(scope, basedir);
+    };
+
+    /**
      * Transforms the meta program.
      * @param {Object} scope Scope
      * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser

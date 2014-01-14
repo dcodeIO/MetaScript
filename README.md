@@ -4,7 +4,7 @@
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
 data, or that do part of the work at compile time that would otherwise be done at runtime.
 
-**MetaScript** is a tool for build-time meta programming using JavaScript as the meta language.
+**MetaScript** is a tool for compile time meta programming using JavaScript as the meta language.
 
 How does it work?
 -----------------
@@ -88,7 +88,18 @@ function writeInt8(value, offset) {
 }
 ```
 
-More example will soon be [available in the wiki](https://github.com/dcodeIO/MetaScript/wiki).
+Results in:
+
+```js
+function writeInt8(value, offset) {
+    if (offset < 0 || offset > this.capacity()) {
+        throw(new RangeError("Illegal offset"));
+    }
+    ...
+}
+```
+
+More in-depth examples are [available in the wiki](https://github.com/dcodeIO/MetaScript/wiki).
 
 API
 ---
@@ -99,8 +110,13 @@ The API is pretty much straight forward:
 * **MetaScript#transform(scope:Object, basedir:string=):string** runs the meta program, transforming the source
   depending on what's defined in `scope` and returns the final source. `basedir` specifies the base directory for top
   level relative includes and defaults to `.` under node.js and `/` in the browser.
+  
+One step compilation / transformation:
+
 * **MetaScript.compile(source:string):string** is just the raw compiler that compiles the source to a meta program and
   returns its JavaScript source.
+* **MetaScript.transform(source:string, scope:Object, basedir:string=):string** compiles the source to a meta program,
+  transforms it using the specified scope and returns the final source.
 
 Command line
 ------------
@@ -125,7 +141,7 @@ There are a few quite useful utility functions available to every meta program:
 * **write(contents:string)**  
   Writes some raw data to the resulting document
 * **writeln(contents:string)**  
-  Writes some raw data, followed by a line break, to the resulting document, which is equal to `//?= __+contents`
+  Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`
 * **dirname(filename:string)**  
   Gets the directory name from a file name
 * **define(varname:string, value:*)**  
@@ -149,4 +165,4 @@ these are JavaScript examples, MetaScript should fit nicely with any other progr
 
 Everything else is, of course, up to your imagination.
 
-**License:** Apache License, Version 2.0
+**License:** Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html

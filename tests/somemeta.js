@@ -44,10 +44,12 @@ function writeInt8(value, offset) {
     // ...
 }
 
-// This will be indented:
+// This will be indented (it's a ?= expression):
     //?= 'var i=0;'
-// Just like this:
+// Just like this (it uses manual indentation):
     //? write(indent('var j=0;\n', 4));
+// Or this (it prepends __):
+    //? write(__+'var k=0;\n');
 // But this will not:
     //? write('var k=0;\n');
 // Got it?
