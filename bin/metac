@@ -2,6 +2,7 @@
 var ascli = require("ascli"),
     app = ascli.app("metac"),
     fs = require("fs"),
+    os = require("os"),
     path = require("path"),
     pkg = require(path.join(__dirname, "..", "package.json")),
     MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
@@ -16,7 +17,7 @@ if (app.argv.length < 1) {
 var filename = app.argv[0];
 
 try {
-    process.stdout.write('// Meta program for: '+filename+'\n// generated with metac v'+pkg.version+' on '+new Date()+'\n'+MetaScript.compile(fs.readFileSync(filename)));
+    process.stdout.write('// MetaScript program for: '+filename+''+os.EOL+'// generated on '+new Date().toISOString()+' with metac v'+pkg.version+os.EOL+MetaScript.compile(fs.readFileSync(filename)));
     app.ok();
 } catch (err) {
     app.fail(err.message);

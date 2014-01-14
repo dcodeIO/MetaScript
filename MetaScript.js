@@ -177,7 +177,7 @@
     MetaScript.transform = function(source, scope, basedir) {
         if (MetaScript.IS_NODE) {
             var sandbox;
-            require("vm").runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir)', sandbox = {
+            require("vm").runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir);', sandbox = {
                 __source: source,
                 __scope: scope,
                 __basedir: basedir,
@@ -200,20 +200,20 @@
         var vars = [];
         for (var k in (scope || {})) {
             if (scope.hasOwnProperty(k)) {
-                vars.push("/*global*/ "+k+" = "+JSON.stringify(scope[k])+";\n");
+                vars.push(k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
-        var out = [], // Output data
-            __  = ''; // Indentation
+        var __out = [],     // Output buffer
+            __    = '';     // Indentation
 
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
-
+        
         /**
          * Writes some contents to the document (no indentation).
          * @param {*} s Contents to write
          */
         function write(s) {
-            out.push(s+"");
+            __out.push(s+"");
         }
 
         /**
@@ -222,7 +222,7 @@
          */
         function writeln(s) {
             if (typeof s === 'undefined') s = '';
-            out.push(s + "\n");
+            write(s+"\n");
         }
 
         /**
@@ -258,27 +258,37 @@
 
         /**
          * Includes another source file.
-         * @param {string} filename File to include
-         * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
+         * @param {string} __filename File to include
+         * @param {boolean} __absolute Whether the path is absolute, defaults to `false` for a relative path
          */
-        function include(filename, absolute) {
-            filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
-            var source;
+        function include(__filename, __absolute) {
+            __filename = __absolute ? __filename : (basedir === '/' ? basedir : basedir + '/') + __filename;
+            var __source;
             if (MetaScript.IS_NODE) {
-                var files = require("glob").sync(filename);
-                source = "";
+                var files = require("glob").sync(__filename);
+                __source = "";
                 files.forEach(function(file, i) {
-                    source += require("fs").readFileSync(file)+"";
+                    if (__source !== '') // Add line break between includes
+                        __source += __source.indexOf('\r\n') >= 0 ? '\r\n' : '\n';
+                    __source += require("fs").readFileSync(file)+"";
                 });
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
                 request.open('GET', filename, false);
                 request.send(null);
                 if (typeof request.responseText === 'string') { // status is 0 on local filesystem
-                    source = request.responseText;
+                    __source = request.responseText;
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
-            write(indent(new MetaScript(source).transform({}, dirname(filename)), __));
+            try {
+                __source = MetaScript.compile(__source);
+                eval(__source);
+            } catch (err) {
+                if (err.rethrow) throw(err);
+                err = new Error(err.message+" in included meta program of '"+__filename+"':\n"+__source, 4);
+                err.rethrow = true;
+                throw(err);
+            }
         }
 
         /**
@@ -298,10 +308,10 @@
         try {
             eval(vars.join('')+this.program); // This is, of course, potentially evil as it is capable of polluting the
             // global namespace if global variables have been declared carelessly. There is no way around, though.
-            return out.join('');
+            return __out.join('');
         } catch (err) {
             if (err.rethrow) throw(err);
-            err = new Error(err.message+" in meta program:\n"+indent(vars.join('')+this.program, 4));
+            err = new Error(err.message+" in main meta program:\n"+indent(vars.join('')+this.program, 4));
             err.rethrow = true;
             throw(err);
         }
