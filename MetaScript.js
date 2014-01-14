@@ -106,9 +106,6 @@
 
                 // Trim whitespaces in front of the line and remember the indentation for include() and such
                 s = s.replace(/\n([ \t]*)$/, function($0, $1) { indent = $1; return '\n'; });
-                if (indent !== lastIndent) {
-                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
-                }
 
                 // Append leading contents
                 append(s);
@@ -117,7 +114,10 @@
                 exprLine.lastIndex = match.index;
                 matchEnd = exprLine.exec(source);
 
-                // Evaluate expression
+                // Expose indentation and evaluate expression
+                if (indent !== lastIndent) {
+                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                }
                 out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
 
                 // Move on
@@ -127,9 +127,6 @@
 
                 // Trim whitespaces in front of the block if it is using a dedicated line and remember the indentation
                 s = s.replace(/\n([ \t]+)$/, function($0, $1) { indent = $1; return '\n'; });
-                if (indent !== lastIndent) {
-                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
-                }
                 
                 // Append leading contents
                 append(s);
@@ -138,7 +135,10 @@
                 exprBlock.lastIndex = match.index;
                 if (matchEnd = exprBlock.exec(source)) {
 
-                    // Evaluate expression
+                    // Expose indentation and evaluate expression
+                    if (indent !== lastIndent) {
+                        out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                    }
                     out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
 
                     // Move on
@@ -228,10 +228,15 @@
         /**
          * Intents a block of text.
          * @param {string} str Text to indent
-         * @param {string} indent Text to use for indentation
+         * @param {string|number} indent Whitespace text to use for indentation or the number of whitespaces to use
          * @returns {string} Indented text
          */
         function indent(str, indent) {
+            if (typeof indent === 'number') {
+                var indent_str = '';
+                while (indent_str.length < indent) indent_str += ' ';
+                indent = indent_str;
+            }
             var lines = str.split("\n");
             for (var i=0; i<lines.length; i++) {
                 lines[i] = indent + lines[i];

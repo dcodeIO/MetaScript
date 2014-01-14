@@ -109,8 +109,8 @@ Transforming sources on the fly is simple with node:
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
-In the case that you want to craft your own runtime, the MetaScript compiler that generates raw meta programs is also
-available as `metac`:
+And in the case that you have to craft your own runtime, the MetaScript compiler that generates raw meta programs is
+also available as `metac`:
 
 ```
  Usage: metac sourcefile [> outfile]
@@ -133,6 +133,8 @@ There are a few quite useful utility functions available to every meta program:
   Deletes a previously defined variable from the scope
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
+* **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given
+  either as a whitespace string or number of whitespaces to use
   
 Additionally, there is one internal variable named `__` (2x underscore) that remembers the current indentation level.
 This is used for example to indent included sources exactly like the meta block that contains the include call.
