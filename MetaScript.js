@@ -88,7 +88,7 @@
                 match;
             while (match = expr.exec(source)) {
                 s = source.substring(index, match.index+1);
-                out.push('  write(\''+escape(s)+'\');\n');
+                if (s !== '') out.push('  write(\''+escape(s)+'\');\n');
                 index = match.index+1;
             }
             s = source.substring(index, source.length);

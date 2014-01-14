@@ -1,5 +1,5 @@
 //? if (typeof WHAT === 'undefined') var WHAT = define('WHAT', false);
-//? if (typeof VERSION === 'undefined') var VERSION = define('VERSION', '1.0');
+//? if (typeof VERSION === 'undefined') var VERSION = define('VERSION', '1.1');
 
 MyLibrary.VERSION = /*?== VERSION */;
 // or, alternatively, if VERSION is always string-safe:
@@ -8,6 +8,8 @@ MyLibrary.VERSION = "/*?= VERSION */";
 MyLibrary.VERSION = //?== VERSION
 // or, alternatively, if you like it procedural:
 MyLibrary.VERSION = /*? write(JSON.stringify(VERSION)) */;
+// or, if you like it as a number even if you shouldn't:
+MyLibrary.VERSION = /*?== parseFloat(VERSION) */;
 
 //? if (WHAT) {
 console.log("WHAT's true");
@@ -22,6 +24,14 @@ console.log("WHAT's false");
 
 console.log(/*? if (WHAT) { */"WHAT's true"+/*? } else { */"WHAT's false"+/*? } */"");
 
+/*? // This is a utility function:
+function myIndent(s) {
+    write(indent(s+'\n', __));
+}
+*/
+// Here the utility function is used:
+    //? myIndent('hello("world");');
+
 //? // This is a macro:
 //? function assertOffset(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
@@ -35,7 +45,7 @@ function writeInt8(value, offset) {
 }
 
 // This will be indented:
-    //?= 'var j=0;'
+    //?= 'var i=0;'
 // Just like this:
     //? write(indent('var j=0;\n', 4));
 // But this will not:
