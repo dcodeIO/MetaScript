@@ -139,11 +139,11 @@ Built-in utility
 There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
-  Writes some raw data to the resulting document
+  Writes some raw data to the resulting document.
 * **writeln(contents:string)**  
-  Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`
+  Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`.
 * **dirname(filename:string)**  
-  Gets the directory name from a file name
+  Gets the directory name from a file name.
 * **define(varname:string, value:*)**  
   Defines a variable on the scope which is then available to includes. To make it available both locally as well as
   globally, use the pattern: `//? var SOMETHING = define('SOMETHING', true);`
@@ -152,7 +152,9 @@ There are a few quite useful utility functions available to every meta program:
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
 * **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given
-  either as a whitespace string or number of whitespaces to use
+  either as a whitespace string or number of whitespaces to use.
+* **escapestr(str:string):string**  
+  Ecapes a string to be used inside of a single or double quote enclosed JavaScript string.
   
 Additionally, there is one internal variable named `__` (2x underscore) that remembers the current indentation level.
 This is used for example to indent included sources exactly like the meta block that contains the include call.

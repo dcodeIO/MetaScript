@@ -282,6 +282,18 @@
             write(indent(new MetaScript(source).transform(scope, dirname(filename)), __));
         }
 
+        /**
+         * Escaoes a string to be used inside of a single or double quote enclosed JavaScript string.
+         * @param {string} s String to escape
+         * @returns {string} Escaped string
+         */
+        function escapestr(s) {
+            return s.replace(/'/g, '\\\'')
+                    .replace(/"/g, '\\"')
+                    .replace(/\r/g, '\\r')
+                    .replace(/\n/g, '\\n');
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         var __=''; // Indentation
