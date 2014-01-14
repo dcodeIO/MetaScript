@@ -123,9 +123,9 @@ Built-in utility
 There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
-  Writes some raw data to the resulting document which is equal to using `?=`
+  Writes some raw data to the resulting document
 * **writeln(contents:string)**  
-  Writes some raw data, followed by a line break, to the resulting document
+  Writes some raw data, followed by a line break, to the resulting document, which is equal to `//?= __+contents`
 * **dirname(filename:string)**  
   Gets the directory name from a file name
 * **define(varname:string, value:*)**  

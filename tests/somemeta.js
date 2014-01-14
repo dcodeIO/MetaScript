@@ -1,6 +1,6 @@
 //? if (typeof WHAT === 'undefined') var WHAT = define('WHAT', false);
 //? if (typeof VERSION === 'undefined') var VERSION = define('VERSION', '1.1');
-
+//? // this just suppresses a line break
 MyLibrary.VERSION = /*?== VERSION */;
 // or, alternatively, if VERSION is always string-safe:
 MyLibrary.VERSION = "/*?= VERSION */";
