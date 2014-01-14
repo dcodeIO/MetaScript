@@ -26,8 +26,7 @@ if (app.argv.length >= 2) {
 console.error(("Processing '"+filename+"' in '"+basedir+"' with scope:\n").white.bold+JSON.stringify(scope, null, 2).grey.bold);
 
 try {
-    var meta = new MetaScript(fs.readFileSync(filename));
-    process.stdout.write(meta.transform(scope, basedir));
+    process.stdout.write(MetaScript.transform(fs.readFileSync(filename), scope, basedir)); // Runs in new vm context
     app.ok();
 } catch (err) {
     app.fail(err.message);

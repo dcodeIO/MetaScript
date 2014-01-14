@@ -110,16 +110,17 @@ The API is pretty much straight forward:
 * **MetaScript#program**  
   Contains the meta program's source.
 * **MetaScript#transform(scope:Object, basedir:string=):string**  
-  Runs the meta program, transforming the source depending on what's defined in `scope` and returns the final source.
-  `basedir` specifies the base directory for top level relative includes and defaults to `.` under node.js and `/` in
-  the browser.
+  Runs the meta program in the current context, transforming the source depending on what's defined in `scope` and
+  returns the final source. `basedir` specifies the base directory for top level relative includes and defaults to `.`
+  under node.js and `/` in the browser.
   
 One step compilation / transformation:
 
 * **MetaScript.compile(source:string):string**  
-  Is just the raw compiler that compiles the source to a meta program and returns its JavaScript source.
+  Compiles the specified source to a meta program and returns its source.
 * **MetaScript.transform(source:string, scope:Object, basedir:string=):string**  
-  Compiles the source to a meta program, transforms it using the specified scope and returns the final source.
+  Compiles the source to a meta program and transforms it using the specified scope. *On node.js, this will wrap the
+  entire process in a new VM context.*
 
 Command line
 ------------

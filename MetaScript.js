@@ -46,7 +46,7 @@
     MetaScript.IS_NODE = typeof require === 'function' && typeof process !== 'undefined' && typeof process.nextTick === 'function';
 
     /**
-     * Compiles the specified source to a meta program.
+     * Compiles the specified source to a meta program and returns its source.
      * @param {string} source Source
      * @returns {string} Meta program
      */
@@ -167,14 +167,26 @@
     };
 
     /**
-     * Compiles a source to a meta program and transforms it using the specified scope.
+     * Compiles the source to a meta program and transforms it using the specified scope. On node.js, this will wrap the
+     *  entire process in a new VM context.
      * @param {string} source Source
      * @param {Object} scope Scope
      * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
      * @returns {string} Transformed source
      */
     MetaScript.transform = function(source, scope, basedir) {
-        return new MetaScript(source).transform(scope, basedir);
+        if (MetaScript.IS_NODE) {
+            var sandbox;
+            require("vm").runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir)', sandbox = {
+                __source: source,
+                __scope: scope,
+                __basedir: basedir,
+                MetaScript: MetaScript
+            });
+            return sandbox.__result;
+        } else {
+            return new MetaScript(source).transform(scope, basedir);
+        }
     };
 
     /**
@@ -191,7 +203,8 @@
                 vars.push("/*global*/ "+k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
-        var out = [];
+        var out = [], // Output data
+            __  = ''; // Indentation
 
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
 
@@ -282,12 +295,9 @@
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        var __=''; // Indentation
         try {
-            eval(vars.join('')+this.program); // This is, of course, potentially evil as it is capable
-            // of polluting the global namespace if variables have been declared carelessly. Always use `var something = ..`
-            // for local (to the file) variables and `define('varname', ...)` for global ones.
-    
+            eval(vars.join('')+this.program); // This is, of course, potentially evil as it is capable of polluting the
+            // global namespace if global variables have been declared carelessly. There is no way around, though.
             return out.join('');
         } catch (err) {
             if (err.rethrow) throw(err);

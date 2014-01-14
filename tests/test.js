@@ -3,14 +3,12 @@ var fs = require("fs"),
     MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
 
 var source = fs.readFileSync(path.join(__dirname, "somemeta.js")),
-    meta = new MetaScript(source);
+    program = MetaScript.compile(source);
 
 console.log("--PROGRAM--");
-console.log(meta.program);
+console.log(program);
 
-var transform = meta.transform({
-    WHAT: true
-}, __dirname);
+source = MetaScript.transform(source, { WHAT:  true }, __dirname);
 
 console.log("--TRANSFORM--");
-console.log(transform);
+console.log(source);
