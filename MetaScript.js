@@ -285,7 +285,7 @@
                 eval(__source);
             } catch (err) {
                 if (err.rethrow) throw(err);
-                err = new Error(err.message+" in included meta program of '"+__filename+"':\n"+__source, 4);
+                err = new Error(err.message+" in included meta program of '"+__filename+"':\n"+indent(__source, 4));
                 err.rethrow = true;
                 throw(err);
             }
