@@ -17,7 +17,7 @@ console.log(/*? if (WHAT) { */ "it's true"+ /*? } else { */ "it's false" /*? } *
         throw(new RangeError("Illegal /*?= varname */"));
     }
 //? }
-ByteBuffer.prototype.writeInt8(value, offset) {
+function writeInt8(value, offset) {
     //? assertOffset('offset');
     // ...
 }

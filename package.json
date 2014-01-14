@@ -1,11 +1,12 @@
 {
     "name": "metascript",
-    "version": "0.8.0",
+    "version": "0.9.0",
     "author": "Daniel Wirtz <dcode@dcode.io>",
     "description": "Meta programming in JavaScript, e.g. to build different versions of a library.",
     "main": "./MetaScript.js",
     "bin": {
-        "metascript": "./bin/metascript"
+        "metascript": "./bin/metascript",
+        "metac": "./bin/metac"
     },
     "repository": {
         "type": "git",

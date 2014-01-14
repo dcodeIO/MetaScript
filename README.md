@@ -109,6 +109,12 @@ Using `metascript` from the command line is simple with node:
  Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
+The MetaScript compiler that generates raw meta programs is also available as `metac`:
+
+```
+ Usage: metac sourcefile [> outfile]
+```
+
 Built-in utility
 ----------------
 There are a few quite useful utility functions available to every meta program:

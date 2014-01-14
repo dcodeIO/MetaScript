@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+var ascli = require("ascli"),
+    app = ascli.app("metac"),
+    fs = require("fs"),
+    path = require("path"),
+    pkg = require(path.join(__dirname, "..", "package.json")),
+    MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
+
+process.stderr.write(ascli("metac".green.bold, "v"+pkg.version)+"\n");
+
+if (app.argv.length < 1) {
+    console.log("Usage: ".white.bold+"metac".green.bold+" sourcefile [> outfile]\n");
+    process.exit(1);
+}
+
+var filename = app.argv[0];
+
+try {
+    process.stdout.write('// Meta program for: '+filename+'\n// generated with metac v'+pkg.version+' on '+new Date()+'\n'+MetaScript.compile(fs.readFileSync(filename)));
+    app.ok();
+} catch (err) {
+    app.fail(err.message);
+}
