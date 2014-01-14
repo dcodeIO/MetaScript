@@ -20,7 +20,7 @@
  * see: https://github.com/dcodeIO/MetaScript for details
  */ //
 (function(global) {
-    "use strict";
+    // not strict
     
     // This is a rather small program with lots of comments, so everyone can hack it easily.
 
@@ -188,7 +188,7 @@
         var vars = [];
         for (var k in (scope || {})) {
             if (scope.hasOwnProperty(k)) {
-                vars.push("var "+k+" = "+JSON.stringify(scope[k])+";\n");
+                vars.push("/*global*/ "+k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
         var out = [];
@@ -224,24 +224,6 @@
         }
 
         /**
-         * Defines a variable on the scope.
-         * @param {string} varname Variable name
-         * @param {*} value Value
-         */
-        function define(varname, value) {
-            scope[varname] = value;
-            return value; // For one-line local assignments
-        }
-
-        /**
-         * Deletes a previously defined variable from the scope.
-         * @param {string} varname Variable name
-         */
-        function undefine(varname) {
-            delete scope[varname];
-        }
-
-        /**
          * Intents a block of text.
          * @param {string} str Text to indent
          * @param {string|number} indent Whitespace text to use for indentation or the number of whitespaces to use
@@ -270,7 +252,11 @@
             filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
             var source;
             if (MetaScript.IS_NODE) {
-                source = require("fs").readFileSync(filename)+"";
+                var files = require("glob").sync(filename);
+                source = "";
+                files.forEach(function(file, i) {
+                    source += require("fs").readFileSync(file)+"";
+                });
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
                 request.open('GET', filename, false);
@@ -279,7 +265,7 @@
                     source = request.responseText;
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
-            write(indent(new MetaScript(source).transform(scope, dirname(filename)), __));
+            write(indent(new MetaScript(source).transform({}, dirname(filename)), __));
         }
 
         /**
@@ -297,11 +283,18 @@
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         var __=''; // Indentation
-        eval('(function(){'+vars.join('')+this.program+'})()'); // This is, of course, potentially evil as it is capable
-        // of polluting the global namespace if variables have been declared carelessly. Always use `var something = ..`
-        // for local (to the file) variables and `define('varname', ...)` for global ones.
-
-        return out.join('');
+        try {
+            eval(vars.join('')+this.program); // This is, of course, potentially evil as it is capable
+            // of polluting the global namespace if variables have been declared carelessly. Always use `var something = ..`
+            // for local (to the file) variables and `define('varname', ...)` for global ones.
+    
+            return out.join('');
+        } catch (err) {
+            if (err.rethrow) throw(err);
+            err = new Error(err.message+" in meta program:\n"+indent(vars.join('')+this.program, 4));
+            err.rethrow = true;
+            throw(err);
+        }
     };
 
     /**

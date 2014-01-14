@@ -1,5 +1,5 @@
 // Meta program for: tests\someinclude.js
-// generated with metac v0.9.3 on Tue Jan 14 2014 05:53:07 GMT+0100 (Mitteleuropäische Zeit)
+// generated with metac v0.10.0 on Tue Jan 14 2014 19:57:48 GMT+0100 (Mitteleuropäische Zeit)
   write('console.log(');
 write(JSON.stringify("included"));
   write(');\r\n');

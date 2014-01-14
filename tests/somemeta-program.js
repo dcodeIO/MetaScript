@@ -1,7 +1,7 @@
 // Meta program for: tests\somemeta.js
-// generated with metac v0.9.3 on Tue Jan 14 2014 05:52:58 GMT+0100 (Mitteleuropäische Zeit)
-if (typeof WHAT === 'undefined') var WHAT = define('WHAT', false);
-if (typeof VERSION === 'undefined') var VERSION = define('VERSION', '1.1');
+// generated with metac v0.10.0 on Tue Jan 14 2014 19:57:39 GMT+0100 (Mitteleuropäische Zeit)
+if (typeof WHAT === 'undefined') WHAT = false;
+if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 // this just suppresses a line break
   write('MyLibrary.VERSION = ');
 write(JSON.stringify(VERSION));
@@ -43,7 +43,7 @@ if (WHAT) {
   write('"");\r\n');
   write('\r\n');
 // This is a utility function:
-function myIndent(s) {
+myIndent = function(s) {
     write(indent(s+'\n', __));
 }
   write('// Here the utility function is used:\r\n');
@@ -52,7 +52,7 @@ myIndent('hello("world");');
   write('\r\n');
 __='';
 // This is a macro:
-function assertOffset(varname) {
+ASSERT_OFFSET = function(varname) {
   write('    if (');
 write(varname);
   write(' < 0 || ');
@@ -66,22 +66,24 @@ write(varname);
   write('function writeInt8(value, offset) {\r\n');
   write('    // Here the macro is used:\r\n');
 __='    ';
-assertOffset('offset');
+ASSERT_OFFSET('offset');
   write('    // ...\r\n');
   write('}\r\n');
   write('\r\n');
-  write('// This will be indented:\r\n');
+  write('// This will be indented (it\'s a ?= expression):\r\n');
   write('    ');
 write('var i=0;');
 writeln();
-  write('// Just like this:\r\n');
+  write('// Just like this (it uses manual indentation):\r\n');
 write(indent('var j=0;\n', 4));
+  write('// Or this (it prepends __):\r\n');
+write(__+'var k=0;\n');
   write('// But this will not:\r\n');
 write('var k=0;\n');
   write('// Got it?\r\n');
   write('\r\n');
 __='';
-var YEP = define("YEP", true);
+YEP = true;
   write('// This will be indented:\r\n');
 __='    ';
 if(YEP) include("someinclude.js")

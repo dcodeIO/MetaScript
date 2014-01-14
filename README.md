@@ -55,10 +55,10 @@ Advanced examples
 Of course it's possible to do much more with it, like declaring macros and defining an entire set of useful utility
 functions, just like with any sort of preprocessor:
 
-#### That's an utility function:
+#### That's a globally available utility function:
 
 ```js
-/*? function includeFile(file) {
+/*? includeFile = function(file) {
     write(require("fs").readFileSync(file));
 } */
 ```
@@ -69,10 +69,10 @@ Using it:
 //? includeFile("some/other/file.js")
 ```
 
-#### That's a macro:
+#### That's a globally available macro:
 
 ```js
-//? function assertOffset(varname) {
+//? ASSERT_OFFSET = function(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
         throw(new RangeError("Illegal /*?= varname */"));
     }
@@ -83,7 +83,7 @@ Using it:
 
 ```js
 function writeInt8(value, offset) {
-    //? assertOffset('offset');
+    //? ASSERT_OFFSET('offset');
     ...
 }
 ```
@@ -147,11 +147,6 @@ There are a few quite useful utility functions available to every meta program:
   Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`.
 * **dirname(filename:string)**  
   Gets the directory name from a file name.
-* **define(varname:string, value:*)**  
-  Defines a variable on the scope which is then available to includes. To make it available both locally as well as
-  globally, use the pattern: `//? var SOMETHING = define('SOMETHING', true);`
-* **undefine(varname:string)**  
-  Deletes a previously defined variable from the scope
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file. `absolute` defaults to `false` (relative)
 * **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given

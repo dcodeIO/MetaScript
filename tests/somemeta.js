@@ -1,5 +1,5 @@
-//? if (typeof WHAT === 'undefined') var WHAT = define('WHAT', false);
-//? if (typeof VERSION === 'undefined') var VERSION = define('VERSION', '1.1');
+//? if (typeof WHAT === 'undefined') WHAT = false;
+//? if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 //? // this just suppresses a line break
 MyLibrary.VERSION = /*?== VERSION */;
 // or, alternatively, if VERSION is always string-safe:
@@ -25,7 +25,7 @@ console.log("WHAT's false");
 console.log(/*? if (WHAT) { */"WHAT's true"+/*? } else { */"WHAT's false"+/*? } */"");
 
 /*? // This is a utility function:
-function myIndent(s) {
+myIndent = function(s) {
     write(indent(s+'\n', __));
 }
 */
@@ -33,14 +33,14 @@ function myIndent(s) {
     //? myIndent('hello("world");');
 
 //? // This is a macro:
-//? function assertOffset(varname) {
+//? ASSERT_OFFSET = function(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
         throw(new RangeError("Illegal /*?= varname */"));
     }
 //? }
 function writeInt8(value, offset) {
     // Here the macro is used:
-    //? assertOffset('offset');
+    //? ASSERT_OFFSET('offset');
     // ...
 }
 
@@ -54,7 +54,7 @@ function writeInt8(value, offset) {
     //? write('var k=0;\n');
 // Got it?
 
-//? var YEP = define("YEP", true);
+//? YEP = true;
 // This will be indented:
     //? if(YEP) include("someinclude.js")
 

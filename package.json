@@ -1,6 +1,6 @@
 {
     "name": "metascript",
-    "version": "0.9.5",
+    "version": "0.10.0",
     "author": "Daniel Wirtz <dcode@dcode.io>",
     "description": "Meta programming in JavaScript, e.g. to build different versions of a library.",
     "main": "./MetaScript.js",
@@ -17,7 +17,8 @@
     },
     "keywords": ["JavaScript", "meta programming", "meta", "build", "preprocessor", "utility"],
     "dependencies": {
-        "ascli": "latest"
+        "ascli": "latest",
+        "glob": "~3.2"
     },
     "devDependencies": {
         "testjs": "latest"
