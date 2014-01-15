@@ -48,7 +48,7 @@ will result in:
 MyLibrary.VERSION = "1.0";
 ```
 
-It's just that simple.
+It's just that simple and everything else is, of course, up to your imagination.
 
 Advanced examples
 -----------------
@@ -99,7 +99,9 @@ function writeInt8(value, offset) {
 }
 ```
 
-More in-depth examples are [available in the wiki](https://github.com/dcodeIO/MetaScript/wiki).
+Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
+these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
+`/* ... */` style comments.
 
 API
 ---
@@ -149,7 +151,7 @@ There are a few quite useful utility functions available to every meta program:
 * **dirname(filename:string)**  
   Gets the directory name from a file name.
 * **include(filename:string, absolute:boolean=)**  
-  Includes another source file. `absolute` defaults to `false` (relative)
+  Includes another source file or multiple ones when using a glob expression. `absolute` defaults to `false` (relative)
 * **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given
   either as a whitespace string or number of whitespaces to use.
 * **escapestr(str:string):string**  
@@ -158,12 +160,10 @@ There are a few quite useful utility functions available to every meta program:
 Additionally, there is one internal variable named `__` (2x underscore) that remembers the current indentation level.
 This is used for example to indent included sources exactly like the meta block that contains the include call.
 
-Examples
---------
-Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
-these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
-`/* ... */` style comments.
-
-Everything else is, of course, up to your imagination.
+Documentation
+-------------
+* [Get additional insights from the wiki](https://github.com/dcodeIO/MetaScript/wiki)
+* [Tiny but fully commented source](https://github.com/dcodeIO/MetaScript/blob/master/MetaScript.js)
+* [View the API documentation](http://htmlpreview.github.com/?http://github.com/dcodeIO/MetaScript/master/docs/MetaScript.html)
 
 **License:** Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html

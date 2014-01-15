@@ -29,6 +29,7 @@
     },
     "scripts": {
         "prepublish": "npm test",
-        "test": "node tests/test.js"
+        "test": "node tests/test.js",
+        "jsdoc": "jsdoc -c jsdoc.json"
     }
 }

@@ -20,19 +20,18 @@
  * see: https://github.com/dcodeIO/MetaScript for details
  */ //
 (function(global) {
-    // not strict
+    // not strict for global var shenanigans
     
-    // This is a rather small program with lots of comments, so everyone can hack it easily.
-
     /**
      * Constructs a new MetaScript instance.
+     * @exports MetaScript
      * @param {string=} source Source to compile
      * @constructor
      */
     var MetaScript = function(source) {
 
         /**
-         * Meta program.
+         * Meta program source.
          * @type {?string}
          */
         this.program = typeof source !== 'undefined' ? MetaScript.compile(source) : null;
@@ -64,7 +63,7 @@
             out = [];                      // Output stack
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
-        function escape(s) {
+        function escapestr(s) {
             return s.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
         }
 
@@ -88,11 +87,11 @@
                 match;
             while (match = expr.exec(source)) {
                 s = source.substring(index, match.index+1);
-                if (s !== '') out.push('  write(\''+escape(s)+'\');\n');
+                if (s !== '') out.push('  write(\''+escapestr(s)+'\');\n');
                 index = match.index+1;
             }
             s = source.substring(index, source.length);
-            if (s !== '') out.push('  write(\''+escape(s)+'\');\n');
+            if (s !== '') out.push('  write(\''+escapestr(s)+'\');\n');
         }
 
         // Turn the meta inside out:
@@ -117,7 +116,7 @@
 
                 // Expose indentation and evaluate expression
                 if (indent !== lastIndent) {
-                    out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                    out.push('__=\''+escapestr(lastIndent = indent)+'\';\n');
                 }
                 out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
                 if (match[2] === '=')
@@ -141,7 +140,7 @@
 
                     // Expose indentation and evaluate expression
                     if (indent !== lastIndent) {
-                        out.push('__=\''+escape(lastIndent = indent)+'\';\n');
+                        out.push('__=\''+escapestr(lastIndent = indent)+'\';\n');
                     }
                     out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
 
@@ -176,16 +175,17 @@
      */
     MetaScript.transform = function(source, scope, basedir) {
         if (MetaScript.IS_NODE) {
-            var sandbox;
-            require("vm").runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir);', sandbox = {
-                __source: source,
-                __scope: scope,
-                __basedir: basedir,
-                MetaScript: MetaScript
+            var vm = require("vm"),
+                sandbox;
+            vm.runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir);', sandbox = {
+                __source   : source,
+                __scope    : scope,
+                __basedir  : basedir,
+                MetaScript : MetaScript
             });
             return sandbox.__result;
         } else {
-            return new MetaScript(source).transform(scope, basedir);
+            return new MetaScript(source).transform(scope, basedir); // Will probably pollute the global namespace
         }
     };
 
@@ -211,6 +211,7 @@
         
         /**
          * Writes some contents to the document (no indentation).
+         * @function write
          * @param {*} s Contents to write
          */
         function write(s) {
@@ -219,6 +220,7 @@
 
         /**
          * Writes some contents to the document, followed by a new line.
+         * @function writeln
          * @param {*} s Contents to write
          */
         function writeln(s) {
@@ -228,6 +230,7 @@
 
         /**
          * Extracts the directory name from a file name.
+         * @function dirname
          * @param {string} filename File name
          * @returns {string} Directory name, defaults to `.`
          */
@@ -238,7 +241,8 @@
         }
 
         /**
-         * Intents a block of text.
+         * Indents a block of text.
+         * @function indent
          * @param {string} str Text to indent
          * @param {string|number} indent Whitespace text to use for indentation or the number of whitespaces to use
          * @returns {string} Indented text
@@ -259,6 +263,7 @@
 
         /**
          * Includes another source file.
+         * @function include
          * @param {string} __filename File to include
          * @param {boolean} __absolute Whether the path is absolute, defaults to `false` for a relative path
          */
@@ -296,6 +301,7 @@
 
         /**
          * Escaoes a string to be used inside of a single or double quote enclosed JavaScript string.
+         * @function escapestr
          * @param {string} s String to escape
          * @returns {string} Escaped string
          */
@@ -354,7 +360,7 @@
     if (typeof module != 'undefined' && module["exports"]) { // CommonJS
         module["exports"] = MetaScript;
     } else if (typeof define != 'undefined' && define["amd"]) { // AMD
-        define(function() { return MetaScript; });
+        define([], function() { return MetaScript; });
     } else { // Shim
         if (!global["dcodeIO"]) {
             global["dcodeIO"] = {};
