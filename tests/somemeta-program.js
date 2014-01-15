@@ -1,5 +1,5 @@
-// Meta program for: tests\somemeta.js
-// generated with metac v0.10.0 on Tue Jan 14 2014 19:57:39 GMT+0100 (Mitteleuropäische Zeit)
+// MetaScript program for: tests\somemeta.js
+// generated on 2014-01-15T14:28:25.188Z with metac v0.14.0
 if (typeof WHAT === 'undefined') WHAT = false;
 if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 // this just suppresses a line break
@@ -84,10 +84,16 @@ write('var k=0;\n');
   write('\r\n');
 __='';
 YEP = true;
+var NOPE = false;
+  write('// var NOPE = ');
+write(NOPE);
+writeln();
   write('// This will be indented:\r\n');
 __='    ';
-if(YEP) include("someinclude.js")
-  write('\r\n');
+if (YEP) include("someinclude.js")
+  write('    // indented once\r\n');
+  write('// not indented\r\n');
+  write('    \r\n');
   write('console.log(');
 write(JSON.stringify("that's it"));
   write(');\r\n');

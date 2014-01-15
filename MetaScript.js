@@ -65,7 +65,7 @@
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
         function escape(s) {
-            return s.replace(/'/g, '\\\'').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
+            return s.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r/g, '\\r').replace(/\n/g, '\\n');
         }
 
         // Evaluates a meta expression
@@ -281,6 +281,7 @@
                     __source = request.responseText;
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
+            var ____ = __;
             try {
                 var __program = MetaScript.compile(indent(__source, __));
                 eval(__program); // see: (*)
@@ -290,6 +291,7 @@
                 err.rethrow = true;
                 throw(err);
             }
+            __ = ____;
         }
 
         /**
@@ -298,7 +300,8 @@
          * @returns {string} Escaped string
          */
         function escapestr(s) {
-            return s.replace(/'/g, '\\\'')
+            return s.replace(/\\/g, '\\\\')
+                    .replace(/'/g, '\\\'')
                     .replace(/"/g, '\\"')
                     .replace(/\r/g, '\\r')
                     .replace(/\n/g, '\\n');
