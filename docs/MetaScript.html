@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="MetaScript"><span class="type-signature"></span>new MetaScript<span class="signature">(source)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="MetaScript"><span class="type-signature"></span>new MetaScript<span class="signature">(source, <span class="optional">filename</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -69,6 +69,8 @@
 		<th>Type</th>
 		
 		
+		<th>Argument</th>
+		
 		
 		
 		
@@ -94,10 +96,47 @@
             </td>
             
             
+                <td class="attributes">
+                
+                    
+                
+                </td>
+            
             
             
             
             <td class="description last"><p>Source to compile</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Source file name if known, defaults to <code>&quot;main&quot;</code>.</p></td>
         </tr>
 	
 	
@@ -206,6 +245,51 @@
         
             
 <dt>
+    <h4 class="name" id="filename"><span class="type-signature"></span>filename<span class="type-signature"> :string</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Original source file name.</p>
+    </div>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="program"><span class="type-signature"></span>program<span class="type-signature"> :string</span></h4>
     
     
@@ -258,7 +342,7 @@
 <dd>
     
     <div class="description">
-        <p>The original source.</p>
+        <p>Original source.</p>
     </div>
     
     
@@ -430,7 +514,7 @@
         
             
 <dt>
-    <h4 class="name" id="transform"><span class="type-signature">&lt;static> </span>transform<span class="signature">(source, scope, <span class="optional">basedir</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="transform"><span class="type-signature">&lt;static> </span>transform<span class="signature">(source, <span class="optional">filename</span>, scope, <span class="optional">basedir</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -498,6 +582,37 @@
             
             
             <td class="description last"><p>Source</p></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>filename</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+            
+            <td class="description last"><p>Source file name</p></td>
         </tr>
 	
 	

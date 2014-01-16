@@ -30,6 +30,7 @@
     "scripts": {
         "prepublish": "npm test",
         "test": "node tests/test.js",
+        "make": "npm test && npm run-script jsdoc",
         "jsdoc": "jsdoc -c jsdoc.json"
     }
 }
