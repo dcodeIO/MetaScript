@@ -8,7 +8,7 @@ var source = fs.readFileSync(path.join(__dirname, "somemeta.js")),
 console.log("--PROGRAM--");
 console.log(program);
 
-source = MetaScript.transform(source, { WHAT:  true }, __dirname);
+source = MetaScript.transform(source, "somemeta.js", { WHAT:  true }, __dirname);
 
 console.log("--TRANSFORM--");
 console.log(source);

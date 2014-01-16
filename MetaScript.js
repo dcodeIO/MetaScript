@@ -25,16 +25,29 @@
     /**
      * Constructs a new MetaScript instance.
      * @exports MetaScript
-     * @param {string=} source Source to compile
+     * @param {string} source Source to compile
+     * @param {string=} filename Source file name if known, defaults to `"main"`.
      * @constructor
      */
-    var MetaScript = function(source) {
+    var MetaScript = function(source, filename) {
 
         /**
-         * Meta program source.
-         * @type {?string}
+         * Original source.
+         * @type {string}
          */
-        this.program = typeof source !== 'undefined' ? MetaScript.compile(source) : null;
+        this.source = source;
+
+        /**
+         * Original source file name.
+         * @type {string}
+         */
+        this.filename = filename || "main";
+
+        /**
+         * The compiled meta program's source.
+         * @type {string}
+         */
+        this.program = MetaScript.compile(source);
     };
 
     /**
@@ -56,11 +69,13 @@
             expr = /(\/\/\?|\/\*\?)(=?)/g, // Line/block expression
             exprLine = /\n|$/g,            // Line terminator
             exprBlock = /\*\//g,           // Block terminator
+            exprEmpty = /(^|\n)([ \t]*)$/, // Empty line expression
             match, matchEnd,               // Matches
             s,                             // Temporary string
             indent = '',                   // Indentation
             lastIndent = '',               // Last indentation
-            out = [];                      // Output stack
+            out = [],                      // Output stack
+            empty;                         // Line empty?
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
         function escapestr(s) {
@@ -99,13 +114,15 @@
 
             // Get leading contents
             s = source.substring(index, match.index);
+            
+            empty = exprEmpty.test(s);
 
             // Look if it is a line or a block of meta
-            if (match[1].indexOf('*') < 0) { // Line
-
+            if (match[1].indexOf('*') < 0) { // Line //? asd
+                
                 // Trim whitespaces in front of the line and remember the indentation
                 if (match[2] !== '=')
-                    s = s.replace(/(^|\n)([ \t]*)$/, function($0, $1, $2) { indent = $2; return $1; });
+                    s = s.replace(exprEmpty, function($0, $1, $2) { indent = $2; return $1; });
                 
                 // Append leading contents
                 append(s);
@@ -119,7 +136,7 @@
                     out.push('__=\''+escapestr(lastIndent = indent)+'\';\n');
                 }
                 out.push(evaluate(source.substring(match.index+3, matchEnd.index).trim()));
-                if (match[2] === '=')
+                if (!empty || match[2] === '=')
                     out.push('writeln();\n');
                 
                 // Move on
@@ -169,23 +186,30 @@
      * Compiles the source to a meta program and transforms it using the specified scope. On node.js, this will wrap the
      *  entire process in a new VM context.
      * @param {string} source Source
-     * @param {Object} scope Scope
+     * @param {string=} filename Source file name
+     * @param {!Object} scope Scope
      * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
      * @returns {string} Transformed source
      */
-    MetaScript.transform = function(source, scope, basedir) {
+    MetaScript.transform = function(source, filename, scope, basedir) {
+        if (typeof filename === 'object') {
+            basedir = scope;
+            scope = filename;
+            filename = undefined;
+        }
         if (MetaScript.IS_NODE) {
             var vm = require("vm"),
                 sandbox;
-            vm.runInNewContext('__result = new MetaScript(__source).transform(__scope, __basedir);', sandbox = {
+            vm.runInNewContext('__result = new MetaScript(__source, __filename).transform(__scope, __basedir);', sandbox = {
                 __source   : source,
+                __filename : filename,
                 __scope    : scope,
                 __basedir  : basedir,
                 MetaScript : MetaScript
             });
             return sandbox.__result;
         } else {
-            return new MetaScript(source).transform(scope, basedir); // Will probably pollute the global namespace
+            return new MetaScript(source, filename).transform(scope, basedir); // Will probably pollute the global namespace
         }
     };
 
@@ -215,6 +239,7 @@
          * @param {*} s Contents to write
          */
         function write(s) {
+            // Strip trailing white spaces on lines
             __out.push(s+"");
         }
 
@@ -264,39 +289,28 @@
         /**
          * Includes another source file.
          * @function include
-         * @param {string} __filename File to include
-         * @param {boolean} __absolute Whether the path is absolute, defaults to `false` for a relative path
+         * @param {string} filename File to include. May be a glob expression on node.js.
+         * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
          */
-        function include(__filename, __absolute) {
-            __filename = __absolute ? __filename : (basedir === '/' ? basedir : basedir + '/') + __filename;
-            var __source;
+        function include(filename, absolute) {
+            filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
+            var ____ = __;
             if (MetaScript.IS_NODE) {
-                var files = require("glob").sync(__filename);
-                __source = "";
-                files.forEach(function(file, i) {
-                    if (__source !== '') // Add line break between includes
-                        __source += __source.indexOf('\r\n') >= 0 ? '\r\n' : '\n';
-                    __source += require("fs").readFileSync(file)+"";
+                var files = require("glob").sync(filename);
+                files.sort(naturalCompare); // Sort these naturally (e.g. int8 < int16)
+                files.forEach(function(file) {
+                    __eval(MetaScript.compile(indent(require("fs").readFileSync(file)+"", __)), file, filename);
+                    __ = ____;
                 });
             } else { // Pull it synchronously, FIXME: Is this working?
                 var request = XHR();
                 request.open('GET', filename, false);
                 request.send(null);
                 if (typeof request.responseText === 'string') { // status is 0 on local filesystem
-                    __source = request.responseText;
+                    __eval(MetaScript.compile(indent(request.responseText, __)), request.responseText, filename);
+                    __ = ____;
                 } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
             }
-            var ____ = __;
-            try {
-                var __program = MetaScript.compile(indent(__source, __));
-                eval(__program); // see: (*)
-            } catch (err) {
-                if (err.rethrow) throw(err);
-                err = new Error(err.message+" in included meta program of '"+__filename+"':\n"+indent(__source, 4));
-                err.rethrow = true;
-                throw(err);
-            }
-            __ = ____;
         }
 
         /**
@@ -315,24 +329,85 @@
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        try {
-            (function() {
-                // Using a wrapper function we enforce a unified behaviour of 'var's between the main and included 
-                // sources, making them always local. Of course it would be possible to make just the main source's vars
-                // globally visible, but that'd be kinda hard to explain and maintain in a reliable way.
-                eval(__program); // see: (*)
-            })();
-            return __out.join('');
-        } catch (err) {
-            if (err.rethrow) throw(err);
-            err = new Error(err.message+" in main meta program:\n"+indent(vars.join('')+this.program, 4));
-            err.rethrow = true;
-            throw(err);
+        /**
+         * Evaluates a meta program.
+         * @param {string} __program Meta program source
+         * @param {string} __source Original source
+         * @param {string} __filename Source file name
+         * @inner
+         * @private
+         */
+        function __eval(__program, __source, __filename) {
+            try {
+                eval(__program);
+            } catch (err) {
+                if (err.rethrow) throw(err);
+                err = new Error(err.message+" in meta program of '"+__filename+"':\n"+__err2code(__program, err));
+                err.rethrow = true;
+                throw(err);
+            }
         }
+        
+        /**
+         * Generates a code view of eval'ed code from an Error.
+         * @param {string} program Failed program
+         * @param {!Error} err Error caught
+         * @returns {string} Code view
+         * @inner
+         * @private
+         */
+        function __err2code(program, err) {
+            if (typeof err.stack !== 'string')
+                return indent(program, 4);
+            var match = /<anonymous>:(\d+):(\d+)\)/.exec(err.stack);
+            if (!match) {
+                return indent(program, 4);
+            }
+            var line = parseInt(match[1], 10)-1,
+                start = line - 3,
+                end = line + 4,
+                lines = program.split("\n");
+            if (start < 0) start = 0;
+            if (end > lines.length) end = lines.length;
+            var code = [];
+            // start = 0; end = lines.length;
+            while (start < end) {
+                code.push(start === line ? "--> "+lines[start] : "    "+lines[start]);
+                start++;
+            }
+            return indent(code.join('\n'), 4);
+        }
+        
+        __eval(__program, this.source, this.filename);
+        return __out.join('').replace(/[ \t]+(\r?\n)/g, function($0, $1) { return $1; });
     };
 
     // (*) The use of eval() is - of course - potentially evil, but there is no way around it without making the library
     //     harder to use. To limit the impact we always use a fresh VM context under node.js in MetaScript.transform.
+
+    /**
+     * Compares two strings naturally, like in `"file9" < "file10"`.
+     * @param {string} a
+     * @param {string} b
+     * @returns {number}
+     * @version 0.4.4
+     * @author Lauri Rooden - https://github.com/litejs/natural-compare-lite
+     * @license MIT License - http://lauri.rooden.ee/mit-license.txt
+     */
+    function naturalCompare(a, b) {
+        if (a != b) for (var i, ca, cb = 1, ia = 0, ib = 0; cb;) {
+            ca = a.charCodeAt(ia++) || 0;
+            cb = b.charCodeAt(ib++) || 0;
+            if (ca < 58 && ca > 47 && cb < 58 && cb > 47) {
+                for (i = ia; ca = a.charCodeAt(ia), ca < 58 && ca > 47; ia++);
+                ca = (a.slice(i - 1, ia) | 0) + 1;
+                for (i = ib; cb = b.charCodeAt(ib), cb < 58 && cb > 47; ib++);
+                cb = (b.slice(i - 1, ib) | 0) + 1;
+            }
+            if (ca != cb) return (ca < cb) ? -1 : 1;
+        }
+        return 0;
+    }
     
     /**
      * Constructs a XMLHttpRequest object.

@@ -1,5 +1,5 @@
 // MetaScript program for: tests\someinclude.js
-// generated on 2014-01-15T14:28:34.593Z with metac v0.14.0
+// generated on 2014-01-16T22:09:50.704Z with metac v0.15.0
   write('// NOPE = ');
 write(typeof NOPE);
 writeln();

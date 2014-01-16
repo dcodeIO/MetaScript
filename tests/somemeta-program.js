@@ -1,5 +1,5 @@
 // MetaScript program for: tests\somemeta.js
-// generated on 2014-01-15T14:28:25.188Z with metac v0.14.0
+// generated on 2014-01-16T22:09:41.264Z with metac v0.15.0
 if (typeof WHAT === 'undefined') WHAT = false;
 if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 // this just suppresses a line break

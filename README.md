@@ -4,7 +4,7 @@
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
 data, or that do part of the work at compile time that would otherwise be done at runtime.
 
-**MetaScript** is a tool for compile time meta programming using JavaScript as the meta language.
+**MetaScript** is a tool for build time meta programming using JavaScript as the meta language.
 
 How does it work?
 -----------------
@@ -155,15 +155,17 @@ There are a few quite useful utility functions available to every meta program:
 * **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given
   either as a whitespace string or number of whitespaces to use.
 * **escapestr(str:string):string**  
-  Ecapes a string to be used inside of a single or double quote enclosed JavaScript string.
+  Escapes a string to be used inside of a single or double quote enclosed JavaScript string.
   
-Additionally, there is one internal variable named `__` (2x underscore) that remembers the current indentation level.
-This is used for example to indent included sources exactly like the meta block that contains the include call.
+Additionally, there are [a few internal variables](https://github.com/dcodeIO/MetaScript/wiki#other-__-prefixed-variables).
+Most notably there is the variable [__](https://github.com/dcodeIO/MetaScript/wiki#the-__-variable) (2x underscore) that
+remembers the current indentation level. This is used for example to indent included sources exactly like the meta block
+that contains the include call.
 
 Documentation
 -------------
-* [Get additional insights from the wiki](https://github.com/dcodeIO/MetaScript/wiki)
-* [Tiny but fully commented source](https://github.com/dcodeIO/MetaScript/blob/master/MetaScript.js)
+* [Get additional insights at the wiki](https://github.com/dcodeIO/MetaScript/wiki)
 * [View the API documentation](http://htmlpreview.github.com/?http://github.com/dcodeIO/MetaScript/master/docs/MetaScript.html)
+* [View the tiny but fully commented source](https://github.com/dcodeIO/MetaScript/blob/master/MetaScript.js)
 
 **License:** Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html

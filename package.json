@@ -1,8 +1,8 @@
 {
     "name": "metascript",
-    "version": "0.14.0",
+    "version": "0.15.0",
     "author": "Daniel Wirtz <dcode@dcode.io>",
-    "description": "Sophisticated compile time neta programming in JavaScript, e.g. to build different versions of a library.",
+    "description": "Sophisticated meta programming in JavaScript, e.g. to build different versions of a library from a single source tree.",
     "main": "./MetaScript.js",
     "bin": {
         "metascript": "./bin/metascript",
