@@ -370,7 +370,7 @@
             if (start < 0) start = 0;
             if (end > lines.length) end = lines.length;
             var code = [];
-            // start = 0; end = lines.length;
+            start = 0; end = lines.length;
             while (start < end) {
                 code.push(start === line ? "--> "+lines[start] : "    "+lines[start]);
                 start++;
