@@ -7,7 +7,7 @@ data, or that do part of the work at compile time that would otherwise be done a
 **MetaScript** is a tool for build time meta programming using JavaScript as the meta language.
 
 <p align="center">
-    <img src="https://raw.github.com/dcodeIO/MetaScript/master/example.png" />
+    <img src="https://raw.github.com/dcodeIO/MetaScript/master/example.jpg" />
 </p>
 
 How does it work?
