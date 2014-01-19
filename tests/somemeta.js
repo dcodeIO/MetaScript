@@ -42,8 +42,14 @@ function writeInt8(value, offset) {
     // Here the macro is used:
     //? ASSERT_OFFSET('offset');
     // ...
-}
 
+
+// before snippet
+//?...
+function bleh() {}
+//?.
+// after snippet
+        
 // This will be indented (it's a ?= expression):
     //?= 'var i=0;'
 // Just like this (it uses manual indentation):

@@ -12,12 +12,13 @@ data, or that do part of the work at compile time that would otherwise be done a
 
 How does it work?
 -----------------
-If you already know JavaScript, adding some meta is as simple as remembering that ...
+If you already know JavaScript, adding some meta is as simple as remembering that:
 
-* A line of meta begins with `//?`
-* A block of meta is enclosed in `/*?`  and `*/`
-* `?=` writes the expression's raw result to the document
-* `?==` writes the expression's typed result to the document (runs it through `JSON.stringify`)
+* `//?` begins a line of meta.
+* `/*?` begins a block of meta and `*/` ends it.
+* `//?...` begins a snippet of meta and `//?.` ends it.
+* `?=` writes the expression's raw result to the document.
+* `?==` writes the expression's typed result to the document (runs it through `JSON.stringify`).
 
 MetaScript then turns the meta inside out, making it the actual program, that outputs the contents in between.
 

@@ -65,17 +65,19 @@
     MetaScript.compile = function(source) {
         source = source+"";
 
-        var index = 0,                     // Current working index
-            expr = /(\/\/\?|\/\*\?)(=?)/g, // Line/block expression
-            exprLine = /\n|$/g,            // Line terminator
-            exprBlock = /\*\//g,           // Block terminator
-            exprEmpty = /(^|\n)([ \t]*)$/, // Empty line expression
-            match, matchEnd,               // Matches
-            s,                             // Temporary string
-            indent = '',                   // Indentation
-            lastIndent = '',               // Last indentation
-            out = [],                      // Output stack
-            empty;                         // Line empty?
+        var index = 0,                                  // Current working index
+            expr = /(\/\/\?|\/\*\?)((?:=|\.\.\.)?)/g,   // Line/block/snippet expression
+            exprLine = /(\r?\n|$)/g,                    // Line terminator
+            exprBlock = /\*\//g,                        // Block terminator
+            exprEnd = /(\/\/\?\.(?:\r?\n|$))/g,         // Snippet terminator
+            exprEmpty = /(^|\n)([ \t]*)$/,              // Empty line expression
+            match, matchEnd,                            // Matches
+            s,                                          // Temporary string
+            indent = '',                                // Indentation
+            lastIndent = '',                            // Last indentation
+            out = [],                                   // Output stack
+            empty,                                      // Line empty?
+            snippet;                                    // Normal line or snippet?
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
         function escapestr(s) {
@@ -88,9 +90,13 @@
                 return 'write(JSON.stringify('+expr.substring(2).trim()+'));\n';
             } else if (expr.substring(0, 1) === '=') {
                 return 'write('+expr.substring(1).trim()+');\n';
-            } else if (expr !== '') {
+            } else if (expr.substring(0, 3) === '...') {
+                expr = '//...\n'+expr.substring(3).trim()+'\n//.';
+            }
+            if (expr !== '') {
                 return expr+'\n';
-            } else return '';
+            }
+            return '';
         }
 
         // Appends additional content to the program, if not empty
@@ -119,7 +125,7 @@
 
             // Look if it is a line or a block of meta
             if (match[1].indexOf('*') < 0) { // Line //? asd
-                
+                                
                 // Trim whitespaces in front of the line and remember the indentation
                 if (match[2] !== '=')
                     s = s.replace(exprEmpty, function($0, $1, $2) { indent = $2; return $1; });
@@ -127,9 +133,15 @@
                 // Append leading contents
                 append(s);
 
-                // Find the end of the line
-                exprLine.lastIndex = match.index;
-                matchEnd = exprLine.exec(source);
+                if (match[2] === '...') { // Start meta                    
+                    // Find the end of the snippet
+                    exprEnd.lastIndex = match.index;
+                    matchEnd = exprEnd.exec(source);
+                } else {
+                    // Find the end of the line
+                    exprLine.lastIndex = match.index;
+                    matchEnd = exprLine.exec(source);
+                }
 
                 // Expose indentation and evaluate expression
                 if (indent !== lastIndent) {
@@ -140,7 +152,7 @@
                     out.push('writeln();\n');
                 
                 // Move on
-                index = matchEnd.index+1;
+                index = matchEnd.index + +matchEnd[0].length;
 
             } else { // Block
 

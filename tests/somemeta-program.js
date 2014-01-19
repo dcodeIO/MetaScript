@@ -1,5 +1,5 @@
 // MetaScript program for: tests\somemeta.js
-// generated on 2014-01-16T22:09:41.264Z with metac v0.15.0
+// generated on 2014-01-19T01:26:58.205Z with metac v0.16.0
 if (typeof WHAT === 'undefined') WHAT = false;
 if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 // this just suppresses a line break
@@ -68,13 +68,21 @@ write(varname);
 __='    ';
 ASSERT_OFFSET('offset');
   write('    // ...\r\n');
-  write('}\r\n');
   write('\r\n');
+  write('\r\n');
+  write('// before snippet\r\n');
+__='';
+//...
+function bleh() {}
+//.
+  write('// after snippet\r\n');
+  write('        \r\n');
   write('// This will be indented (it\'s a ?= expression):\r\n');
   write('    ');
 write('var i=0;');
 writeln();
   write('// Just like this (it uses manual indentation):\r\n');
+__='    ';
 write(indent('var j=0;\n', 4));
   write('// Or this (it prepends __):\r\n');
 write(__+'var k=0;\n');
