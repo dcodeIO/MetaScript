@@ -5,7 +5,7 @@
 data, or that do part of the work at compile time that would otherwise be done at runtime.
 
 **MetaScript** is a tool for build time meta programming using JavaScript as the meta language. Written between the
-lines it enables a developer to transform sources in pretty much every way possible.
+lines it enables developers to transform sources in pretty much every way possible.
 
 <p align="center">
     <img src="https://raw.github.com/dcodeIO/MetaScript/master/example.jpg" />
