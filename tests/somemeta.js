@@ -1,6 +1,33 @@
 //? if (typeof WHAT === 'undefined') WHAT = false;
 //? if (typeof VERSION === 'undefined') VERSION = '1.0.0';
-//? // this just suppresses a line break
+//?
+// Line expressions
+
+//? if (WHAT) {
+console.log("WHAT's true");
+//? } else {
+console.log("WHAT's false");
+//? }
+
+// Block expressions
+
+/*? if (WHAT) */
+console.log("WHAT's true");
+/*? else */
+console.log("WHAT's false");
+
+console.log(/*? if (WHAT) { */"WHAT's true"+/*? } else { */"WHAT's false"+/*? } */"");
+
+// Snippets
+
+// before snippet
+//?...
+function bleh() {}
+//?.
+// after snippet
+
+// ?= expressions
+
 MyLibrary.VERSION = /*?== VERSION */;
 // or, alternatively, if VERSION is always string-safe:
 MyLibrary.VERSION = "/*?= VERSION */";
@@ -11,28 +38,15 @@ MyLibrary.VERSION = /*? write(JSON.stringify(VERSION)) */;
 // or, if you like it as a number even if you shouldn't:
 MyLibrary.VERSION = /*?== parseFloat(VERSION) */;
 
-//? if (WHAT) {
-console.log("WHAT's true");
-//? } else {
-console.log("WHAT's false");
-//? }
+// Utility functions using __
 
-/*? if (WHAT) */
-console.log("WHAT's true");
-/*? else */
-console.log("WHAT's false");
-
-console.log(/*? if (WHAT) { */"WHAT's true"+/*? } else { */"WHAT's false"+/*? } */"");
-
-/*? // This is a utility function:
-myIndent = function(s) {
+/*? myIndent = function(s) {
     write(indent(s+'\n', __));
-}
-*/
-// Here the utility function is used:
+} */
     //? myIndent('hello("world");');
 
-//? // This is a macro:
+// Macros
+
 //? ASSERT_OFFSET = function(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
         throw(new RangeError("Illegal /*?= varname */"));
@@ -42,14 +56,10 @@ function writeInt8(value, offset) {
     // Here the macro is used:
     //? ASSERT_OFFSET('offset');
     // ...
+}
+      
+// Indentation, includes and variable visibility
 
-
-// before snippet
-//?...
-function bleh() {}
-//?.
-// after snippet
-        
 // This will be indented (it's a ?= expression):
     //?= 'var i=0;'
 // Just like this (it uses manual indentation):
@@ -67,8 +77,13 @@ function bleh() {}
     //? if (YEP) include("someinclude.js")
     // indented once
 // not indented
-    
-console.log(/*?== "that's it" */);
 
+// snip-snap
+
+//? snip();
+console.log("snippet");
+//? var snippet = snap();
+//?= snippet + snippet
+    
 // Before end
 //?

@@ -4,7 +4,8 @@
 **Metaprogramming** is the writing of computer programs that write or manipulate other programs (or themselves) as their
 data, or that do part of the work at compile time that would otherwise be done at runtime.
 
-**MetaScript** is a tool for build time meta programming using JavaScript as the meta language.
+**MetaScript** is a tool for build time meta programming using JavaScript as the meta language. Written between the
+lines it enables a developer to transform sources in pretty much every way possible.
 
 <p align="center">
     <img src="https://raw.github.com/dcodeIO/MetaScript/master/example.jpg" />
@@ -160,6 +161,10 @@ There are a few quite useful utility functions available to every meta program:
   either as a whitespace string or number of whitespaces to use.
 * **escapestr(str:string):string**  
   Escapes a string to be used inside of a single or double quote enclosed JavaScript string.
+* **snip()**  
+  Begins a snipping operation at the current offset of the output.
+* **snap():string**  
+  Ends a snipping operation, returning the (suppressed) output between the two calls to `snip()` and `snap()`.
   
 Additionally, there are [a few internal variables](https://github.com/dcodeIO/MetaScript/wiki#other-__-prefixed-variables).
 Most notably there is the variable [__](https://github.com/dcodeIO/MetaScript/wiki#the-__-variable) (2x underscore) that

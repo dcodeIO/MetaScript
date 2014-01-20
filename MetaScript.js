@@ -244,12 +244,13 @@ module.exports = (function() {
                 vars.push(k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
-        var __program,  // Current meta program
-            __filename, // Current source file name
-            __dirname,  // Current source file directory name
-            __source,   // Current source
-            __    = '', // Current indentation level
-            __out = []; // Output buffer
+        var __program,   // Current meta program
+            __filename,  // Current source file name
+            __dirname,   // Current source file directory name
+            __source,    // Current source
+            __    = '',  // Current indentation level
+            __out = [],  // Output buffer
+            __snip = -1; // Snipping indicator
 
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
         
@@ -270,6 +271,28 @@ module.exports = (function() {
         function writeln(s) {
             if (typeof s === 'undefined') s = '';
             write(s+"\n");
+        }
+
+        /**
+         * Begins a snipping operation at the current offset of the output.
+         * @function
+         */
+        function snip() {
+            __snip = __out.length;
+        }
+
+        /**
+         * Ends a snipping operation, returning the (suppressed) output between the two calls to {@link snip} and
+         *  this function.
+         * @function
+         * @returns {string}
+         */
+        function snap() {
+            if (__snip < 0)
+                throw(new Error("Illegal call to snap(): Not snipping"));
+            var snipped = __out.splice(__snip, __out.length - __snip).join('');
+            __snip = -1;
+            return snipped;
         }
 
         /**
@@ -306,24 +329,24 @@ module.exports = (function() {
         /**
          * Includes another source file.
          * @function include
-         * @param {string} includeFile File to include. May be a glob expression on node.js.
+         * @param {string} filename File to include. May be a glob expression on node.js.
          * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
          */
-        function include(includeFile, absolute) {
-            includeFile = absolute
-                ? includeFile
-                : __dirname + '/' + includeFile;
+        function include(filename, absolute) {
+            filename = absolute
+                ? filename
+                : __dirname + '/' + filename;
             var _program  = __program,  // Previous meta program
                 _source   = __source,   // Previous source
                 _filename = __filename, // Previous source file
                 _dirname  = __dirname,  // Previous source directory
                 _indent   = __;         // Previous indentation level
             var files;
-            if (/(?:^|[^\\])\*/.test(includeFile)) {
-                files = require("glob").sync(includeFile, { cwd : __dirname, nosort: true });
+            if (/(?:^|[^\\])\*/.test(filename)) {
+                files = require("glob").sync(filename, { cwd : __dirname, nosort: true });
                 files.sort(naturalCompare); // Sort these naturally (e.g. int8 < int16)
             } else {
-                files = [includeFile];
+                files = [filename];
             }
             files.forEach(function(file) {
                 var source = require("fs").readFileSync(file)+"";
