@@ -1,5 +1,4 @@
-// MetaScript program for: tests\somemeta.js
-// generated on 2014-01-19T01:26:58.205Z with metac v0.16.0
+MetaScript(0,17,0);
 if (typeof WHAT === 'undefined') WHAT = false;
 if (typeof VERSION === 'undefined') VERSION = '1.0.0';
 // this just suppresses a line break
@@ -105,3 +104,6 @@ if (YEP) include("someinclude.js")
   write('console.log(');
 write(JSON.stringify("that's it"));
   write(');\r\n');
+  write('\r\n');
+  write('// Before end\r\n');
+__='';

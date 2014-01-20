@@ -1,8 +1,4 @@
-// MetaScript program for: tests\someinclude.js
-// generated on 2014-01-16T22:09:50.704Z with metac v0.15.0
-  write('// NOPE = ');
-write(typeof NOPE);
-writeln();
+MetaScript(0,17,0);
   write('console.log(');
 write(JSON.stringify("included"));
   write(');\r\n');
@@ -10,3 +6,14 @@ write(JSON.stringify("included"));
   write('// This will be indented once more:\r\n');
 __='    ';
 if (YEP) include("sub/someotherinclude.js");
+  write('\r\n');
+  write('// This should say \'undefined\' as NOPE is not visible in other files:\r\n');
+  write('// ');
+write(typeof NOPE);
+writeln();
+  write('\r\n');
+  write('// This should say \'undefined\' as filename is not visible in __runProgram:\r\n');
+  write('// ');
+write(typeof filename === 'undefined' ? 'undefined' : filename);
+writeln();
+  write('\r\n');
