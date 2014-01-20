@@ -19,23 +19,37 @@
  * Released under the Apache License, Version 2.0
  * see: https://github.com/dcodeIO/MetaScript for details
  */ //
-(function(global) {
+module.exports = (function() {
     // not strict for global var shenanigans
+
+    /**
+     * Current meta program version.
+     * @type {string}
+     */
+    var __version = require(__dirname+"/package.json")['version'];
     
     /**
      * Constructs a new MetaScript instance.
      * @exports MetaScript
-     * @param {string} source Source to compile
+     * @param {string} sourceOrProgram Source to compile or meta program to run
      * @param {string=} filename Source file name if known, defaults to `"main"`.
      * @constructor
      */
-    var MetaScript = function(source, filename) {
-
+    var MetaScript = function(sourceOrProgram, filename) {
+        
+        if (!(this instanceof MetaScript)) {
+            __version = Array.prototype.join.call(arguments, '.');
+            return;
+        }
+        
+        // Whether constructing from a meta program or, otherwise, a source
+        var isProgram = (sourceOrProgram+="").substring(0, 11) === 'MetaScript(';
+        
         /**
          * Original source.
-         * @type {string}
+         * @type {?string}
          */
-        this.source = source;
+        this.source = isProgram ? null : sourceOrProgram;
 
         /**
          * Original source file name.
@@ -47,15 +61,15 @@
          * The compiled meta program's source.
          * @type {string}
          */
-        this.program = MetaScript.compile(source);
+        this.program = isProgram ? sourceOrProgram : MetaScript.compile(sourceOrProgram);
     };
-
+    
     /**
-     * Whether running under node.js or not.
-     * @type {boolean}
+     * MetaScript version.
+     * @type {string}
      * @const
      */
-    MetaScript.IS_NODE = typeof require === 'function' && typeof process !== 'undefined' && typeof process.nextTick === 'function';
+    MetaScript.VERSION = __version;
 
     /**
      * Compiles the specified source to a meta program and returns its source.
@@ -65,19 +79,20 @@
     MetaScript.compile = function(source) {
         source = source+"";
 
-        var index = 0,                                  // Current working index
-            expr = /(\/\/\?|\/\*\?)((?:=|\.\.\.)?)/g,   // Line/block/snippet expression
-            exprLine = /(\r?\n|$)/g,                    // Line terminator
-            exprBlock = /\*\//g,                        // Block terminator
-            exprEnd = /(\/\/\?\.(?:\r?\n|$))/g,         // Snippet terminator
-            exprEmpty = /(^|\n)([ \t]*)$/,              // Empty line expression
-            match, matchEnd,                            // Matches
-            s,                                          // Temporary string
-            indent = '',                                // Indentation
-            lastIndent = '',                            // Last indentation
-            out = [],                                   // Output stack
-            empty,                                      // Line empty?
-            snippet;                                    // Normal line or snippet?
+        var index = 0,                              // Current working index
+            expr = /(\/\/\?|\/\*\?)((?:=|\.\.\.)?)/g, // Line/block/snippet expression
+            exprLine = /(\r?\n|$)/g,                // Line terminator
+            exprBlock = /\*\//g,                    // Block terminator
+            exprEnd = /(\/\/\?\.(?:\r?\n|$))/g,     // Snippet terminator
+            exprEmpty = /(^|\n)([ \t]*)$/,          // Empty line expression
+            match, matchEnd,                        // Matches
+            s,                                      // Temporary string
+            indent = '',                            // Indentation
+            lastIndent = '',                        // Last indentation
+            out = [],                               // Output stack
+            empty;                                  // Line empty?
+        
+        out.push('MetaScript('+MetaScript.VERSION.split('.')+');\n');
 
         // Escapes a string to be used in a JavaScript string enclosed in single quotes
         function escapestr(s) {
@@ -152,7 +167,7 @@
                     out.push('writeln();\n');
                 
                 // Move on
-                index = matchEnd.index + +matchEnd[0].length;
+                index = matchEnd.index + matchEnd[0].length;
 
             } else { // Block
 
@@ -195,53 +210,46 @@
     };
 
     /**
-     * Compiles the source to a meta program and transforms it using the specified scope. On node.js, this will wrap the
-     *  entire process in a new VM context.
+     * Compiles the source to a meta program and transforms it using the specified scope in a new VM context.
      * @param {string} source Source
      * @param {string=} filename Source file name
      * @param {!Object} scope Scope
-     * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
      * @returns {string} Transformed source
      */
-    MetaScript.transform = function(source, filename, scope, basedir) {
+    MetaScript.transform = function(source, filename, scope) {
         if (typeof filename === 'object') {
-            basedir = scope;
             scope = filename;
-            filename = undefined;
+            filename = "main";
         }
-        if (MetaScript.IS_NODE) {
-            var vm = require("vm"),
-                sandbox;
-            vm.runInNewContext('__result = new MetaScript(__source, __filename).transform(__scope, __basedir);', sandbox = {
-                __source   : source,
-                __filename : filename,
-                __scope    : scope,
-                __basedir  : basedir,
-                MetaScript : MetaScript
-            });
-            return sandbox.__result;
-        } else {
-            return new MetaScript(source, filename).transform(scope, basedir); // Will probably pollute the global namespace
-        }
+        var vm = require("vm"),
+            sandbox;
+        vm.runInNewContext('__result = new MetaScript(__source, __filename).transform(__scope);', sandbox = {
+            __source   : source,
+            __filename : filename,
+            __scope    : scope,
+            MetaScript : MetaScript
+        });
+        return sandbox.__result;
     };
 
     /**
      * Transforms the meta program.
      * @param {Object} scope Scope
-     * @param {string=} basedir Base directory for includes, defaults to `.` on node and `/` in the browser
      * @returns {string} Transformed source
      */
-    MetaScript.prototype.transform = function(scope, basedir) {
-        basedir = basedir || (MetaScript.IS_NODE ? "." : "/");
+    MetaScript.prototype.transform = function(scope) {
         var vars = [];
         for (var k in (scope || {})) {
             if (scope.hasOwnProperty(k)) {
                 vars.push(k+" = "+JSON.stringify(scope[k])+";\n");
             }
         }
-        var __program = vars.join('')+this.program, // Meta program
-            __out = [],                             // Output buffer
-            __    = '';                             // Indentation
+        var __program,  // Current meta program
+            __filename, // Current source file name
+            __dirname,  // Current source file directory name
+            __source,   // Current source
+            __    = '', // Current indentation level
+            __out = []; // Output buffer
 
         ///////////////////////////////////////////// Built-in functions ///////////////////////////////////////////////
         
@@ -251,7 +259,6 @@
          * @param {*} s Contents to write
          */
         function write(s) {
-            // Strip trailing white spaces on lines
             __out.push(s+"");
         }
 
@@ -269,12 +276,10 @@
          * Extracts the directory name from a file name.
          * @function dirname
          * @param {string} filename File name
-         * @returns {string} Directory name, defaults to `.`
+         * @returns {string} Directory name
          */
         function dirname(filename) {
-            var p = Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\\\"));
-            if (p >= 0) return filename.substring(0, p);
-            return ".";
+            return require("path").dirname(filename);
         }
 
         /**
@@ -301,28 +306,38 @@
         /**
          * Includes another source file.
          * @function include
-         * @param {string} filename File to include. May be a glob expression on node.js.
+         * @param {string} includeFile File to include. May be a glob expression on node.js.
          * @param {boolean} absolute Whether the path is absolute, defaults to `false` for a relative path
          */
-        function include(filename, absolute) {
-            filename = absolute ? filename : (basedir === '/' ? basedir : basedir + '/') + filename;
-            var ____ = __;
-            if (MetaScript.IS_NODE) {
-                var files = require("glob").sync(filename);
+        function include(includeFile, absolute) {
+            includeFile = absolute
+                ? includeFile
+                : __dirname + '/' + includeFile;
+            var _program  = __program,  // Previous meta program
+                _source   = __source,   // Previous source
+                _filename = __filename, // Previous source file
+                _dirname  = __dirname,  // Previous source directory
+                _indent   = __;         // Previous indentation level
+            var files;
+            if (/(?:^|[^\\])\*/.test(includeFile)) {
+                files = require("glob").sync(includeFile, { cwd : __dirname, nosort: true });
                 files.sort(naturalCompare); // Sort these naturally (e.g. int8 < int16)
-                files.forEach(function(file) {
-                    __eval(MetaScript.compile(indent(require("fs").readFileSync(file)+"", __)), file, filename);
-                    __ = ____;
-                });
-            } else { // Pull it synchronously, FIXME: Is this working?
-                var request = XHR();
-                request.open('GET', filename, false);
-                request.send(null);
-                if (typeof request.responseText === 'string') { // status is 0 on local filesystem
-                    __eval(MetaScript.compile(indent(request.responseText, __)), request.responseText, filename);
-                    __ = ____;
-                } else throw(new Error("Failed to fetch '"+filename+"': "+request.status));
+            } else {
+                files = [includeFile];
             }
+            files.forEach(function(file) {
+                var source = require("fs").readFileSync(file)+"";
+                __program = MetaScript.compile(indent(source, __));
+                __source = source;
+                __filename = file;
+                __dirname = dirname(__filename);
+                __runProgram();
+                __program = _program;
+                __source = _source;
+                __filename = _filename;
+                __dirname = _dirname;
+                __ = _indent;
+            });
         }
 
         /**
@@ -342,14 +357,11 @@
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         /**
-         * Evaluates a meta program.
-         * @param {string} __program Meta program source
-         * @param {string} __source Original source
-         * @param {string} __filename Source file name
+         * Runs a meta program.
          * @inner
          * @private
          */
-        function __eval(__program, __source, __filename) {
+        function __runProgram() {
             try {
                 eval(__program);
             } catch (err) {
@@ -390,7 +402,12 @@
             return indent(code.join('\n'), 4);
         }
         
-        __eval(__program, this.source, this.filename);
+        __program = vars.join('')+this.program;
+        vars = undefined;
+        __source = this.source;
+        __filename = this.filename;
+        __dirname = dirname(__filename);
+        __runProgram();
         return __out.join('').replace(/[ \t]+(\r?\n)/g, function($0, $1) { return $1; });
     };
 
@@ -421,38 +438,5 @@
         return 0;
     }
     
-    /**
-     * Constructs a XMLHttpRequest object.
-     * @returns {!XMLHttpRequest}
-     * @inner
-     */
-    function XHR() {
-        var XMLHttpFactories = [
-            function () {return new XMLHttpRequest()},
-            function () {return new ActiveXObject("Msxml2.XMLHTTP")},
-            function () {return new ActiveXObject("Msxml3.XMLHTTP")},
-            function () {return new ActiveXObject("Microsoft.XMLHTTP")}
-        ];
-        var xhr = null;
-        for (var i=0;i<XMLHttpFactories.length;i++) {
-            try { xhr = XMLHttpFactories[i](); }
-            catch (e) { continue; }
-            break;
-        }
-        if (!xhr) throw(new Error("XMLHttpRequest is not supported"));
-        return xhr;
-    }
-
-    // Enable module loading if available
-    if (typeof module != 'undefined' && module["exports"]) { // CommonJS
-        module["exports"] = MetaScript;
-    } else if (typeof define != 'undefined' && define["amd"]) { // AMD
-        define([], function() { return MetaScript; });
-    } else { // Shim
-        if (!global["dcodeIO"]) {
-            global["dcodeIO"] = {};
-        }
-        global["dcodeIO"]["MetaScript"] = MetaScript;
-    }
-
-})(this);
+    return MetaScript;
+})();

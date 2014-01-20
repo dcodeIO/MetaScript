@@ -69,3 +69,6 @@ function bleh() {}
 // not indented
     
 console.log(/*?== "that's it" */);
+
+// Before end
+//?

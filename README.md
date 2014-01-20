@@ -112,22 +112,21 @@ API
 ---
 The API is pretty much straight forward:
 
-* **new MetaScript(source:string)**  
-  Creates a new instance with `source` compiled to a meta program.
+* **new MetaScript(source:string, filename:string)**  
+  Creates a new instance with `source`, located at `filename`, compiled to a meta program.
 * **MetaScript#program**  
   Contains the meta program's source.
-* **MetaScript#transform(scope:Object, basedir:string=):string**  
+* **MetaScript#transform(scope:Object):string**  
   Runs the meta program in the current context, transforming the source depending on what's defined in `scope` and
-  returns the final source. `basedir` specifies the base directory for top level relative includes and defaults to `.`
-  under node.js and `/` in the browser.
+  returns the final source.
   
 One step compilation / transformation:
 
 * **MetaScript.compile(source:string):string**  
   Compiles the specified source to a meta program and returns its source.
-* **MetaScript.transform(source:string, scope:Object, basedir:string=):string**  
-  Compiles the source to a meta program and transforms it using the specified scope. *On node.js, this will wrap the
-  entire process in a new VM context.*
+* **MetaScript.transform(source:string, filename:string, scope:Object):string**  
+  Compiles `source`, located at `filename`, to a meta program and transforms it using the specified scope in a new VM
+  context.
 
 Command line
 ------------
@@ -136,7 +135,7 @@ Transforming sources on the fly is simple with node:
 `npm install -g metascript`
 
 ```
- Usage: metascript sourcefile [basedir] -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
+ Usage: metascript sourcefile -SOMEDEFINE="some" -OTHERDEFINE="thing" [> outfile]
 ```
 
 And in the case that you have to craft your own runtime, the raw compiler is also available as `metac`:

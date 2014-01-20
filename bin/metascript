@@ -9,7 +9,7 @@ var ascli = require("ascli"),
 process.stderr.write(ascli("metascript".green.bold, ("v"+pkg.version).gray.bold));
 
 if (app.argv.length < 1) {
-    console.log("Usage: ".white.bold+"metascript".green.bold+" sourcefile [basedir] -SOMEDEFINE=\"some\" -OTHERDEFINE=\"thing\" [> outfile]\n");
+    console.log("Usage: ".white.bold+"metascript".green.bold+" sourcefile -SOMEDEFINE=\"some\" -OTHERDEFINE=\"thing\" [> outfile]\n");
     process.exit(1);
 }
 
@@ -17,16 +17,10 @@ var filename = app.argv[0],
     basedir,
     scope = app.opt;
 
-if (app.argv.length >= 2) {
-    basedir = app.argv[1];
-} else {
-    basedir = path.dirname(filename);
-}
-
 console.error(("Processing '"+filename+"' in '"+basedir+"' with scope:\n").white.bold+JSON.stringify(scope, null, 2).grey.bold);
 
 try {
-    process.stdout.write(MetaScript.transform(fs.readFileSync(filename), filename, scope, basedir)); // Runs in new vm context
+    process.stdout.write(MetaScript.transform(fs.readFileSync(filename), filename, scope)); // Runs in new vm context
     app.ok();
 } catch (err) {
     app.fail(err.message);

@@ -17,7 +17,7 @@ if (app.argv.length < 1) {
 var filename = app.argv[0];
 
 try {
-    process.stdout.write('// MetaScript program for: '+filename+''+os.EOL+'// generated on '+new Date().toISOString()+' with metac v'+pkg.version+os.EOL+MetaScript.compile(fs.readFileSync(filename)));
+    process.stdout.write(MetaScript.compile(fs.readFileSync(filename)));
     app.ok();
 } catch (err) {
     app.fail(err.message);

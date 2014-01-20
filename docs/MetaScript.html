@@ -39,7 +39,7 @@
     
         
 <dt>
-    <h4 class="name" id="MetaScript"><span class="type-signature"></span>new MetaScript<span class="signature">(source, <span class="optional">filename</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="MetaScript"><span class="type-signature"></span>new MetaScript<span class="signature">(sourceOrProgram, <span class="optional">filename</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -83,7 +83,7 @@
 	
         <tr>
             
-                <td class="name"><code>source</code></td>
+                <td class="name"><code>sourceOrProgram</code></td>
             
             
             <td class="type">
@@ -105,7 +105,7 @@
             
             
             
-            <td class="description last"><p>Source to compile</p></td>
+            <td class="description last"><p>Source to compile or meta program to run</p></td>
         </tr>
 	
 	
@@ -200,14 +200,14 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="IS_NODE"><span class="type-signature">&lt;static, constant> </span>IS_NODE<span class="type-signature"> :boolean</span></h4>
+    <h4 class="name" id="VERSION"><span class="type-signature">&lt;static, constant> </span>VERSION<span class="type-signature"> :string</span></h4>
     
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>Whether running under node.js or not.</p>
+        <p>MetaScript version.</p>
     </div>
     
     
@@ -514,7 +514,7 @@
         
             
 <dt>
-    <h4 class="name" id="transform"><span class="type-signature">&lt;static> </span>transform<span class="signature">(source, <span class="optional">filename</span>, scope, <span class="optional">basedir</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="transform"><span class="type-signature">&lt;static> </span>transform<span class="signature">(source, <span class="optional">filename</span>, scope)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -522,8 +522,7 @@
     
     
     <div class="description">
-        <p>Compiles the source to a meta program and transforms it using the specified scope. On node.js, this will wrap the
- entire process in a new VM context.</p>
+        <p>Compiles the source to a meta program and transforms it using the specified scope in a new VM context.</p>
     </div>
     
 
@@ -645,37 +644,6 @@
         </tr>
 	
 	
-	
-        <tr>
-            
-                <td class="name"><code>basedir</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-            
-            <td class="description last"><p>Base directory for includes, defaults to <code>.</code> on node and <code>/</code> in the browser</p></td>
-        </tr>
-	
-	
 	</tbody>
 </table>
     
@@ -742,7 +710,7 @@
         
             
 <dt>
-    <h4 class="name" id="transform"><span class="type-signature"></span>transform<span class="signature">(scope, <span class="optional">basedir</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    <h4 class="name" id="transform"><span class="type-signature"></span>transform<span class="signature">(scope)</span><span class="type-signature"> &rarr; {string}</span></h4>
     
     
 </dt>
@@ -772,8 +740,6 @@
 		<th>Type</th>
 		
 		
-		<th>Argument</th>
-		
 		
 		
 		
@@ -799,47 +765,10 @@
             </td>
             
             
-                <td class="attributes">
-                
-                    
-                
-                </td>
-            
             
             
             
             <td class="description last"><p>Scope</p></td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>basedir</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-            
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-                    
-                
-                </td>
-            
-            
-            
-            
-            <td class="description last"><p>Base directory for includes, defaults to <code>.</code> on node and <code>/</code> in the browser</p></td>
         </tr>
 	
 	
