@@ -65,7 +65,7 @@ functions, just like with any sort of preprocessor:
 
 ```js
 /*? includeFile = function(file) {
-    write(require("fs").readFileSync(file));
+    write(indent(require("fs").readFileSync(file)), __);
 } */
 ```
 
@@ -103,6 +103,21 @@ function writeInt8(value, offset) {
     }
     ...
 }
+```
+
+#### And that's a snippet with both the utility function and macro from above:
+
+```js
+//?...
+includeFile = function(file) {
+    write(indent(require("fs").readFileSync(file)), __);
+};
+
+ASSERT_OFFSET = function(varname) {
+    writeln(__+'if ('+varname+' < 0 || '+varname+' > this.capacity()) {');
+    writeln(__+'    throw(new RangeError("Illegal '+varname+'"));');
+};
+//?.
 ```
 
 Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
@@ -150,7 +165,7 @@ Built-in utility
 There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
-  Writes some raw data to the resulting document.
+  Writes some raw data to the resulting document, which is equal to using `/*?= contents */`.
 * **writeln(contents:string)**  
   Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`.
 * **dirname(filename:string)**  
