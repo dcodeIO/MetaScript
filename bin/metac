@@ -5,9 +5,11 @@ var ascli = require("ascli"),
     os = require("os"),
     path = require("path"),
     pkg = require(path.join(__dirname, "..", "package.json")),
-    MetaScript = require(path.join(__dirname, "..", "MetaScript.js"));
+    MetaScript = require(path.join(__dirname, "..", "MetaScript.js")),
+    opt = app.opt;
 
-process.stderr.write(ascli("metac".green.bold, "MetaScript compiler "+("v"+pkg.version).gray.bold)+"\n");
+if (!opt.quiet)
+    process.stderr.write(ascli("metac".green.bold, "MetaScript compiler "+("v"+pkg.version).gray.bold)+"\n");
 
 if (app.argv.length < 1) {
     console.log("Usage: ".white.bold+"metac".green.bold+" sourcefile [> outfile]\n");
@@ -18,7 +20,8 @@ var filename = app.argv[0];
 
 try {
     process.stdout.write(MetaScript.compile(fs.readFileSync(filename)));
-    app.ok();
+    if (!opt.quiet)
+        app.ok();
 } catch (err) {
     app.fail(err.message);
 }

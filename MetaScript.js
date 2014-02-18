@@ -233,7 +233,9 @@ module.exports = (function() {
     };
 
     /**
-     * Transforms the meta program.
+     * Runs the meta program with the specified scope in the current context and returns the final document. This method
+     *  should always be invoked in a fresh or otherwise safe context, so if you do not know exactly what you are doing,
+     *  use {@link MetaScript.transform} instead, which always creates a fresh VM context before calling this method.
      * @param {Object} scope Scope
      * @returns {string} Transformed source
      */
