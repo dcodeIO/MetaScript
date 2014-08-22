@@ -11,6 +11,8 @@ lines it enables developers to transform sources in pretty much every way possib
     <img src="https://raw.github.com/dcodeIO/MetaScript/master/example.jpg" />
 </p>
 
+[![Donate](https://raw.githubusercontent.com/dcodeIO/MetaScript/master/donate.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=info%40code-emitter.com&item_name=Open%20Source%3A%20MetaScript)
+
 How does it work?
 -----------------
 If you already know JavaScript, adding some meta is as simple as remembering that:
@@ -32,11 +34,6 @@ Let's assume that you have a library and that you want its version number to be 
 MyLibrary.VERSION = /*?== VERSION */;
 // or, alternatively, if VERSION is always string-safe:
 MyLibrary.VERSION = "/*?= VERSION */";
-// or, alternatively, if you don't mind a missing trailing semicolon:
-MyLibrary.VERSION = //?== VERSION
-// or, alternatively, if you like it procedural:
-MyLibrary.VERSION = /*? write(JSON.stringify(VERSION)) */;
-// etc.
 ```
 
 This is what the meta program, when compiled, will look like:
@@ -61,7 +58,17 @@ Advanced examples
 Of course it's possible to do much more with it, like declaring macros and defining an entire set of useful utility
 functions, just like with any sort of preprocessor:
 
-#### That's a globally available utility function:
+#### That's a globally available utility function as a snippet:
+
+```js
+//?...
+includeFile = function(file) {
+    write(indent(require("fs").readFileSync(file)), __);
+}
+//?.
+```
+
+or, as a block:
 
 ```js
 /*? includeFile = function(file) {
@@ -75,12 +82,12 @@ Using it:
 //? includeFile("some/other/file.js")
 ```
 
-#### That's a globally available macro:
+#### That's a globally available macro using inline blocks:
 
 ```js
 //? ASSERT_OFFSET = function(varname) {
     if (/*?= varname */ < 0 || /*?= varname */ > this.capacity()) {
-        throw(new RangeError("Illegal /*?= varname */"));
+        throw RangeError("Illegal /*?= varname */");
     }
 //? }
 ```
@@ -99,28 +106,13 @@ Results in:
 ```js
 function writeInt8(value, offset) {
     if (offset < 0 || offset > this.capacity()) {
-        throw(new RangeError("Illegal offset"));
+        throw RangeError("Illegal offset");
     }
     ...
 }
 ```
 
-#### And that's a snippet with both the utility function and macro from above:
-
-```js
-//?...
-includeFile = function(file) {
-    write(indent(require("fs").readFileSync(file)), __);
-};
-
-ASSERT_OFFSET = function(varname) {
-    writeln(__+'if ('+varname+' < 0 || '+varname+' > this.capacity()) {');
-    writeln(__+'    throw(new RangeError("Illegal '+varname+'"));');
-};
-//?.
-```
-
-Some early examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
+Some examples are available in the [tests folder](https://github.com/dcodeIO/MetaScript/tree/master/tests). While
 these are JavaScript examples, MetaScript should fit nicely with any other programming language that uses `// ...` and
 `/* ... */` style comments.
 
@@ -166,18 +158,25 @@ There are a few quite useful utility functions available to every meta program:
 
 * **write(contents:string)**  
   Writes some raw data to the resulting document, which is equal to using `/*?= contents */`.
+  
 * **writeln(contents:string)**  
   Writes some raw data, followed by a line break, to the resulting document, which is equal to using `//?= __+contents`.
+  
 * **dirname(filename:string)**  
   Gets the directory name from a file name.
+  
 * **include(filename:string, absolute:boolean=)**  
   Includes another source file or multiple ones when using a glob expression. `absolute` defaults to `false` (relative)
+  
 * **indent(str:string, indent:string|number):string** indents a block of text using the specified indentation given
   either as a whitespace string or number of whitespaces to use.
+  
 * **escapestr(str:string):string**  
   Escapes a string to be used inside of a single or double quote enclosed JavaScript string.
+  
 * **snip()**  
   Begins a snipping operation at the current offset of the output.
+  
 * **snap():string**  
   Ends a snipping operation, returning the (suppressed) output between the two calls to `snip()` and `snap()`.
   
@@ -186,10 +185,14 @@ Most notably there is the variable [__](https://github.com/dcodeIO/MetaScript/wi
 remembers the current indentation level. This is used for example to indent included sources exactly like the meta block
 that contains the include call.
 
+Using utility dependencies
+--------------------------
+In case this isn't obvious: Add the dependency to your package.json and use `//? myutility = require('metascript-myutility')`.
+
 Documentation
 -------------
 * [Get additional insights at the wiki](https://github.com/dcodeIO/MetaScript/wiki)
-* [View the API documentation](http://htmlpreview.github.com/?http://github.com/dcodeIO/MetaScript/master/docs/MetaScript.html)
+* [View the API documentation](http://htmlpreview.github.io/?https://raw.githubusercontent.com/dcodeIO/MetaScript/master/docs/index.html)
 * [View the tiny but fully commented source](https://github.com/dcodeIO/MetaScript/blob/master/MetaScript.js)
 
 **License:** Apache License, Version 2.0 - http://www.apache.org/licenses/LICENSE-2.0.html

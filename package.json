@@ -1,36 +1,43 @@
 {
-    "name": "metascript",
-    "version": "0.18.1",
-    "author": "Daniel Wirtz <dcode@dcode.io>",
-    "description": "Sophisticated meta programming in JavaScript, e.g. to build different versions of a library from a single source tree.",
-    "main": "./MetaScript.js",
-    "bin": {
-        "metascript": "./bin/metascript",
-        "metac": "./bin/metac"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/dcodeIO/MetaScript.git"
-    },
-    "bugs": {
-        "url": "https://github.com/dcodeIO/MetaScript/issues"
-    },
-    "keywords": ["JavaScript", "meta programming", "meta", "build", "preprocessor", "utility"],
-    "dependencies": {
-        "ascli": "~0.3",
-        "glob": "~3.2"
-    },
-    "devDependencies": {
-        "testjs": "~1"
-    },
-    "license": "Apache-2.0",
-    "engines": {
-        "node": ">=0.8"
-    },
-    "scripts": {
-        "prepublish": "npm test",
-        "test": "node tests/test.js",
-        "make": "npm test && npm run-script jsdoc",
-        "jsdoc": "jsdoc -c jsdoc.json"
-    }
+  "name": "metascript",
+  "version": "1.0.0",
+  "author": "Daniel Wirtz <dcode@dcode.io>",
+  "description": "Sophisticated meta programming in JavaScript, e.g. to build different versions of a library from a single source tree.",
+  "main": "./MetaScript.js",
+  "bin": {
+    "metascript": "./bin/metascript",
+    "metac": "./bin/metac"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dcodeIO/MetaScript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dcodeIO/MetaScript/issues"
+  },
+  "keywords": [
+    "JavaScript",
+    "meta programming",
+    "meta",
+    "build",
+    "preprocessor",
+    "utility"
+  ],
+  "dependencies": {
+    "ascli": "~0.3",
+    "glob": "~3.2"
+  },
+  "devDependencies": {
+    "jsdoc": "~3.3"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=0.8"
+  },
+  "scripts": {
+    "prepublish": "npm test",
+    "test": "node tests/test.js",
+    "make": "npm test && npm run-script jsdoc",
+    "jsdoc": "node node_modules/jsdoc/jsdoc.js -c jsdoc.json"
+  }
 }

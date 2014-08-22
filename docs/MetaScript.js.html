@@ -1,5 +1,32 @@
-/*
- Copyright 2013 Daniel Wirtz <dcode@dcode.io>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MetaScript.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MetaScript.js</h1>
+
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
+ Copyright 2013 Daniel Wirtz &lt;dcode@dcode.io>
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -15,7 +42,7 @@
  */
 
 /**
- * @license MetaScript (c) 2013 Daniel Wirtz <dcode@dcode.io>
+ * @license MetaScript (c) 2013 Daniel Wirtz &lt;dcode@dcode.io>
  * Released under the Apache License, Version 2.0
  * see: https://github.com/dcodeIO/MetaScript for details
  */ //
@@ -139,7 +166,7 @@ module.exports = (function() {
             empty = exprEmpty.test(s);
 
             // Look if it is a line or a block of meta
-            if (match[1].indexOf('*') < 0) { // Line //? asd
+            if (match[1].indexOf('*') &lt; 0) { // Line //? asd
                                 
                 // Trim whitespaces in front of the line and remember the indentation
                 if (match[2] !== '=')
@@ -290,7 +317,7 @@ module.exports = (function() {
          * @returns {string}
          */
         function snap() {
-            if (__snip < 0)
+            if (__snip &lt; 0)
                 throw(new Error("Illegal call to snap(): Not snipping"));
             var snipped = __out.splice(__snip, __out.length - __snip).join('');
             __snip = -1;
@@ -317,11 +344,11 @@ module.exports = (function() {
         function indent(str, indent) {
             if (typeof indent === 'number') {
                 var indent_str = '';
-                while (indent_str.length < indent) indent_str += ' ';
+                while (indent_str.length &lt; indent) indent_str += ' ';
                 indent = indent_str;
             }
             var lines = str.split(/\n/);
-            for (var i=0; i<lines.length; i++) {
+            for (var i=0; i&lt;lines.length; i++) {
                 if (lines[i].trim() !== '')
                     lines[i] = indent + lines[i];
             }
@@ -346,7 +373,7 @@ module.exports = (function() {
             var files;
             if (/(?:^|[^\\])\*/.test(filename)) {
                 files = require("glob").sync(filename, { cwd : __dirname, nosort: true });
-                files.sort(naturalCompare); // Sort these naturally (e.g. int8 < int16)
+                files.sort(naturalCompare); // Sort these naturally (e.g. int8 &lt; int16)
             } else {
                 files = [filename];
             }
@@ -408,7 +435,7 @@ module.exports = (function() {
         function __err2code(program, err) {
             if (typeof err.stack !== 'string')
                 return indent(program, 4);
-            var match = /<anonymous>:(\d+):(\d+)\)/.exec(err.stack);
+            var match = /&lt;anonymous>:(\d+):(\d+)\)/.exec(err.stack);
             if (!match) {
                 return indent(program, 4);
             }
@@ -416,11 +443,11 @@ module.exports = (function() {
                 start = line - 3,
                 end = line + 4,
                 lines = program.split("\n");
-            if (start < 0) start = 0;
+            if (start &lt; 0) start = 0;
             if (end > lines.length) end = lines.length;
             var code = [];
             start = 0; end = lines.length;
-            while (start < end) {
+            while (start &lt; end) {
                 code.push(start === line ? "--> "+lines[start] : "    "+lines[start]);
                 start++;
             }
@@ -440,7 +467,7 @@ module.exports = (function() {
     //     harder to use. To limit the impact we always use a fresh VM context under node.js in MetaScript.transform.
 
     /**
-     * Compares two strings naturally, like in `"file9" < "file10"`.
+     * Compares two strings naturally, like in `"file9" &lt; "file10"`.
      * @param {string} a
      * @param {string} b
      * @returns {number}
@@ -452,16 +479,39 @@ module.exports = (function() {
         if (a != b) for (var i, ca, cb = 1, ia = 0, ib = 0; cb;) {
             ca = a.charCodeAt(ia++) || 0;
             cb = b.charCodeAt(ib++) || 0;
-            if (ca < 58 && ca > 47 && cb < 58 && cb > 47) {
-                for (i = ia; ca = a.charCodeAt(ia), ca < 58 && ca > 47; ia++);
+            if (ca &lt; 58 &amp;&amp; ca > 47 &amp;&amp; cb &lt; 58 &amp;&amp; cb > 47) {
+                for (i = ia; ca = a.charCodeAt(ia), ca &lt; 58 &amp;&amp; ca > 47; ia++);
                 ca = (a.slice(i - 1, ia) | 0) + 1;
-                for (i = ib; cb = b.charCodeAt(ib), cb < 58 && cb > 47; ib++);
+                for (i = ib; cb = b.charCodeAt(ib), cb &lt; 58 &amp;&amp; cb > 47; ib++);
                 cb = (b.slice(i - 1, ib) | 0) + 1;
             }
-            if (ca != cb) return (ca < cb) ? -1 : 1;
+            if (ca != cb) return (ca &lt; cb) ? -1 : 1;
         }
         return 0;
     }
     
     return MetaScript;
 })();
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="MetaScript.html">MetaScript</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dirname">dirname</a></li><li><a href="global.html#escapestr">escapestr</a></li><li><a href="global.html#include">include</a></li><li><a href="global.html#indent">indent</a></li><li><a href="global.html#write">write</a></li><li><a href="global.html#writeln">writeln</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.0-alpha9</a> on Sat Aug 23 2014 00:45:26 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
