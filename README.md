@@ -187,7 +187,15 @@ that contains the include call.
 
 Using utility dependencies
 --------------------------
-In case this isn't obvious: Add the dependency to your package.json and use `//? myutility = require('metascript-myutility')`.
+In case this isn't obvious: Add the dependency to your package.json and, in MetaScript, use:
+```js
+//? myutility = require('metascript-myutility')
+```
+
+Usage with Grunt
+----------------
+[Meinaart van Straalen](https://github.com/meinaart) created a Grunt plugin for MetaScript:
+[grunt-metascript](https://github.com/meinaart/grunt-metascript) ([npm](https://www.npmjs.org/package/grunt-metascript))
 
 Documentation
 -------------
