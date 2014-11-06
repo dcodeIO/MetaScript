@@ -62,8 +62,8 @@ functions, just like with any sort of preprocessor:
 
 ```js
 //?...
-includeFile = function(file) {
-    write(indent(require("fs").readFileSync(file)), __);
+simpleIncludeExample = function(file) {
+    write(indent(require("fs").readFileSync(file).toString("utf8")), __);
 }
 //?.
 ```
@@ -71,16 +71,19 @@ includeFile = function(file) {
 or, as a block:
 
 ```js
-/*? includeFile = function(file) {
-    write(indent(require("fs").readFileSync(file)), __);
+/*? simpleIncludeExample = function(file) {
+    write(indent(require("fs").readFileSync(file).toString("utf8")), __);
 } */
 ```
 
 Using it:
 
 ```js
-//? includeFile("some/other/file.js")
+//? simpleIncludeExample("some/other/file.js")
 ```
+
+This is, of course, just an example. See [built-in utility](https://github.com/dcodeIO/MetaScript#built-in-utility) for
+what's actually available out of the box.
 
 #### That's a globally available macro using inline blocks:
 
@@ -192,10 +195,12 @@ In case this isn't obvious: Add the dependency to your package.json and, in Meta
 //? myutility = require('metascript-myutility')
 ```
 
-Usage with Grunt
-----------------
-[Meinaart van Straalen](https://github.com/meinaart) created a Grunt plugin for MetaScript:
-[grunt-metascript](https://github.com/meinaart/grunt-metascript) ([npm](https://www.npmjs.org/package/grunt-metascript))
+Usage as a task
+---------------
+* [Meinaart van Straalen](https://github.com/meinaart) created a Grunt task:
+  [grunt-metascript](https://github.com/meinaart/grunt-metascript) ([npm](https://www.npmjs.org/package/grunt-metascript))
+* [Wutian](https://github.com/Naituw) created a Broccoli task:
+  [broccoli-metascript](https://github.com/Naituw/broccoli-metascript)
 
 Documentation
 -------------
