@@ -201,6 +201,8 @@ Usage as a task
   [grunt-metascript](https://github.com/meinaart/grunt-metascript) ([npm](https://www.npmjs.org/package/grunt-metascript))
 * [Wutian](https://github.com/Naituw) created a Broccoli task:
   [broccoli-metascript](https://github.com/Naituw/broccoli-metascript)
+* [Jose Pereira](https://github.com/oNaiPs) created a Gulp task:
+  [gulp-metascript](https://github.com/oNaiPs/gulp-metascript) ([npm](https://www.npmjs.com/package/gulp-metascript))
 
 Documentation
 -------------
